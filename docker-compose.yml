@@ -1,0 +1,44 @@
+version: '2'
+services:  
+  redis:
+    container_name: con_redis
+    ports:
+      - '0.0.0.0:6379:6379'
+    volumes:
+      - '/data/dvolumes/safechain/docker-redis:/data'
+    image: redis
+    networks:
+      - my_network   
+  backend_s:
+    ports:
+      - '0.0.0.0:3001:3001'
+    container_name: backend_s
+    restart: always
+    build: ./api_service
+    env_file: ./config/api.env
+    environment:
+      - NODE_ENV=prod
+    networks:
+      my_network:
+        ipv4_address: 10.10.11.2
+  cron_s:
+    ports:
+      - '0.0.0.0:3003:3003'
+    container_name: cron_s
+    restart: always
+    build: ./cron_service/
+    env_file: ./config/cron.env
+    environment:
+      - NODE_ENV=prod
+    networks:
+      my_network:
+        ipv4_address: 10.10.11.4
+networks:
+  my_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: 'false'
+    ipam:
+      config:
+        - subnet: 10.10.11.0/16
+          gateway: 10.10.11.1
