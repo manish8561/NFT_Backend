@@ -4,11 +4,13 @@ import { ResMsg } from './response/responseMessage';
 import MongoDb from './common/mongoDb.connection';
 import Utilities from './common/utilities.helper';
 import Redis from './common/redis.helper';
+import Validate from './common/validate.helper';
 
 export const Helper = {
     Response: ResponseHelper,
     ResMsg,
     MongoDb,
     Utilities,
-    Redis
+    Redis,
+    Validate
 }

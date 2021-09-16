@@ -1,7 +1,9 @@
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from 'bcryptjs';
+const OtpGenerator = require('otp-generator');
+import * as CryptoJS from 'crypto-js';
 
-const ONE_DAY = 60 * 60 * 24; /** One day */
+const ONE_DAY = 60 * 60 * 24 * 7; /** One day */
 
 class Utilities {
 
@@ -20,6 +22,26 @@ class Utilities {
         } catch (error) {
             return error;
         }
+    }
+
+    /**
+     * @function requestEncryption
+     * @param data 
+     * @returns 
+     */
+    public requestEncryption(data: any) {
+        const encryptionKey: any = process.env.ENCDECRYPTKEY;
+        return CryptoJS.AES.encrypt(JSON.stringify(data), encryptionKey).toString();
+    }
+
+    /**
+     * @function reqDeEncrypt
+     * @param text 
+     * @returns 
+     */
+    public reqDeEncrypt(data: any) {
+        const reqEncKey: any = process.env.ENCDECRYPTKEY!;
+        return CryptoJS.AES.decrypt(data, reqEncKey).toString(CryptoJS.enc.Utf8);
     }
 
     /**
@@ -60,6 +82,10 @@ class Utilities {
     public async compareHash(passwordtext: string, hash: string): Promise<any> {
         const saltRounds = 10;
         return await bcrypt.compare(passwordtext, hash);
+    }
+
+    public async generateOtp(limit: number): Promise<any> {
+        return OtpGenerator.generate(limit, { upperCase: false, specialChars: false, alphabets: false });
     }
 }
 
