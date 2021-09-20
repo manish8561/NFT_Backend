@@ -45,7 +45,7 @@ class App {
 
         /** To check if server is running */
         this.app.use("/v1/wallets/status", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            return Helper.Response.success(res, { isSuccess: true, results: { message: `Service running on Port ${this.port}.` } });
+            return Helper.Response.sendSuccess(res, { isSuccess: true, results: { message: `Service running on Port ${this.port}.` } });
         })
     };
 

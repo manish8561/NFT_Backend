@@ -19,34 +19,34 @@ class MintTokenController implements Interfaces.Controller {
     }
 
     private async getMintedTokens(req: Request, res: Response, next: NextFunction) {
+        const { Response: { sendError, sendSuccess } } = Helper;
+
         try {
-            const { Response: { error, success } } = Helper;
             const data: Interfaces.MintToken = req.body;
             const result: any = await MintTokenModel.getMintedTokens(data);
             /** return error - failed status */
-            if (result.errors) return error(res, { status: 400, error: result.errors });
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
 
             /** return seccess - registered user */
-            return success(res, { message: "Fetched Minted Data", data: { logs: result } });
-        } catch (err) {
-            const { Response: { error }, ResMsg: { errors: { INTERNAL_SERVER_ERROR } } } = Helper;
-            return error(res, { status: 500, error: { message: INTERNAL_SERVER_ERROR, error: err } });
+            return sendSuccess(res, { message: "Fetched Minted Data", data: { logs: result } });
+        } catch (error) {
+            return sendError(res, { status: 500, error: { error } });
         }
     }
 
     private async uploadFile(req: Request, res: Response, next: NextFunction) {
+        const { Response: { sendError, sendSuccess } } = Helper;
+
         try {
-            const { Response: { error, success } } = Helper;
             const data: any = { file: req.file, host: req.hostname };
             const result = await MintTokenModel.uploadFile(data);
             /** return error - failed status */
-            if (result.errors) return error(res, { status: 400, error: result.errors });
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
 
             /** return seccess - registered user */
-            return success(res, { message: "Fetched Minted Data", data: { file: result } });
-        } catch (err) {
-            const { Response: { error }, ResMsg: { errors: { INTERNAL_SERVER_ERROR } } } = Helper;
-            return error(res, { status: 500, error: { message: INTERNAL_SERVER_ERROR, error: err } });
+            return sendSuccess(res, { message: "Fetched Minted Data", data: { file: result } });
+        } catch (error) {
+            return sendError(res, { status: 500, error: { error } });
         }
     }
 

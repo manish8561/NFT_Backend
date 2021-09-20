@@ -1,6 +1,6 @@
 import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
-import User from './user.schema';
+import User from './collection.schema';
 
 class UserModel {
 

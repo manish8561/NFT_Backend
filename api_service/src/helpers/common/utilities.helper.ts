@@ -1,6 +1,5 @@
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from 'bcryptjs';
-const OtpGenerator = require('otp-generator');
 import * as CryptoJS from 'crypto-js';
 
 const ONE_DAY = 60 * 60 * 24 * 7; /** One day */
@@ -83,10 +82,7 @@ class Utilities {
         const saltRounds = 10;
         return await bcrypt.compare(passwordtext, hash);
     }
-
-    public async generateOtp(limit: number): Promise<any> {
-        return OtpGenerator.generate(limit, { upperCase: false, specialChars: false, alphabets: false });
-    }
+   
 }
 
 export default new Utilities();

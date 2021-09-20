@@ -1,9 +1,22 @@
-import mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
-interface User {
-    address: string,
-    role: string,
-    status: string,
+interface Social {
+    twitter: string,
+    insta: string,
+    website: string,
 }
 
-export default User;
+interface User extends Schema {
+    wallet: string;
+    walletAddress: string;
+    networkId: string;
+    username: string,
+    email: string;
+    bio: string;
+    socialLinks: Social,
+}
+
+export {
+    Social,
+    User
+} ;

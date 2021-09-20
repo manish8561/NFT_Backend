@@ -13,9 +13,11 @@ class Validate {
         let _errors: any = {};
 
         for (const key in obj) {
+            if (key === "networkId") obj[key] = String(obj[key]);
+
             if (((obj[key]) && (obj[key] !== undefined))) {
                 if (Validator.isEmpty(obj[key], { ignore_whitespace: false })) {
-                    _errors[key] = `${key} is required.`;
+                    _errors[key ] = `${key} is required.`;
                 }
             }
 
@@ -23,13 +25,13 @@ class Validate {
                 _errors[key] = `${key} is required.`;
             }
 
-            if (key === "mobile") {
-                if (!Validator.isMobilePhone(obj[key])) {
-                    _errors[key] = `Enter a valid ${key} number.`;
+            if (key === "walletAddress" && obj[key] !== undefined) {
+                if (!Validator.isEthereumAddress(obj[key])) {
+                    _errors[key] = `Enter a valid ${key}.`;
                 }
             }
 
-            if ((key === "_id") || (key === "following")) {
+            if (key === "_id") {
                 if (!Validator.isMongoId(obj[key])) {
                     _errors[key] = `Enter a valid ${key}.`;
                 }

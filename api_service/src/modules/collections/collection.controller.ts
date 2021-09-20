@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
-import UserModel from "./user.model";
+import UserModel from "./collection.model";
 import { Helper } from '../../helpers';
 
 class UserController implements Interfaces.Controller {
@@ -21,11 +21,11 @@ class UserController implements Interfaces.Controller {
         const { Response: { sendError, sendSuccess } } = Helper;
 
         try {
+            console.log('Hit');
             const _user: Interfaces.User = req.body;
-            console.log(_user)
+            console.log(_user);
             let result = await UserModel.loginUserOrMaybeRegister(_user);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
-            console.log(result)
             const token: string = await UserModel.generateJwtToken(result);
             result = { user: result };
             return sendSuccess(res, { message: 'SUCCESS', data: result, token });

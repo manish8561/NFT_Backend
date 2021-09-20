@@ -9,7 +9,7 @@ class ResponseHelper {
      * @param data 
      * @returns Success Response
      */
-    public success(res: Response, data: any = {}) {
+    public sendSuccess(res: Response, data: any = {}) {
         return res.status(200).json({ ...data, status: "200" });
     } 
 
@@ -19,7 +19,7 @@ class ResponseHelper {
      * @param errors 
      * @returns Error Response
      */
-    public error(res: Response, errors: Interfaces.Error) {
+    public sendError(res: Response, errors: Interfaces.Error) {
         let { status } = errors;
         status = status || 400;
         return res.status(status).json({ errors });
