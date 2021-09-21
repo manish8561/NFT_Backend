@@ -22,7 +22,7 @@ class MintTokenController implements Interfaces.Controller {
         const { Response: { sendError, sendSuccess } } = Helper;
 
         try {
-            const data: Interfaces.MintToken = req.body;
+            const data = req.body;
             const result: any = await MintTokenModel.getMintedTokens(data);
             /** return error - failed status */
             if (result.errors) return sendError(res, { status: 400, error: result.errors });

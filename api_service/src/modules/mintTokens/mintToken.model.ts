@@ -12,7 +12,7 @@ class MintTokenModel {
      * @param _wallet
      * @returns user
      */
-    public async getMintedTokens(data: Interfaces.MintToken): Promise<any> {
+    public async getMintedTokens(data: any): Promise<any> {
         try {
             let { page, limit, user } = data;
             page = Number(page) || 0;

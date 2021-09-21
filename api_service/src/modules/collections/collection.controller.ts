@@ -28,7 +28,7 @@ class CollectionController implements Interfaces.Controller {
 
         try {
             const { _id } = req.user!;
-            let _collection: Interfaces.Collection = req.body;
+            let _collection = req.body;
             _collection.user = _id;
 
             const result = await CollectionModel.createCollection(_collection);
@@ -46,11 +46,11 @@ class CollectionController implements Interfaces.Controller {
         } = Helper;
 
         try {
+            let query = req.query!;
             const { _id } = req.user!;
-            let _collection: Interfaces.Collection = req.body;
-            _collection.user = _id;
+            query.user = _id;
 
-            const result = await CollectionModel.createCollection(_collection);
+            const result = await CollectionModel.getCollection(query);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: CREATE_COLLECTION });
         } catch (error: any) {
