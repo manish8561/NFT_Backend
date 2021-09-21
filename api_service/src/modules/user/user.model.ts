@@ -38,8 +38,8 @@ class UserModel {
 
     public async generateJwtToken(user: Interfaces.User | any): Promise<string> {
         const { Utilities: { generateJwt } } = Helper;
-        const { _id, walletAddress } = user;
-        return await generateJwt({ walletAddress, _id });
+        const { _id, walletAddress, role } = user;
+        return await generateJwt({ walletAddress, _id, role });
     }
 }
 
