@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 interface Collection extends Schema {
     name: string;
-    url: string;
+    externalLink: string;
     description: string;
     logo: string;
     banner: string;
@@ -14,8 +14,10 @@ interface Collection extends Schema {
     collaborators: Array<string>;
     blockChain: string;
     displayTheme: string;
-    paymentTokens: Array<string>;
+    paymentToken: Array<string>;
     sensitiveContent: string;
+    status: string;
+    user: mongoose.Types.ObjectId;
 }
 
 export default Collection;
