@@ -2,25 +2,13 @@ import mongoose, { Mongoose, Schema } from "mongoose";
 import mongooseUniqueValidator from 'mongoose-unique-validator';
 import * as Interfaces from '../../interfaces';
 
-class UserSchema extends Schema<Interfaces.User> implements Interfaces.User {
+class UserSchema extends Schema {
     public schema!: mongoose.Schema;
 
     constructor() {
         super();
         this.createSchema();
     }
-   
-    wallet: string = '';
-    walletAddress: string = '';
-    networkId: string = '';
-    username: string = '';
-    email: string = '';
-    bio: string = '';
-    socialLinks: Interfaces.Social = {
-        twitter: "",
-        insta: "",
-        website: ""
-    };
 
     private createSchema() {
         this.schema = new Schema({
@@ -30,13 +18,9 @@ class UserSchema extends Schema<Interfaces.User> implements Interfaces.User {
             username: { type: String, unique: true, index: true, trim: true },
             email: { type: String, unique: true, trim: true },
             bio: { type: String, default: "" },
-            socialLinks: {
-                twitter: { type: String, trim: true, default: "" },
-                insta: { type: String, trim: true, default: "" },
-                website: { type: String, trim: true, default: "" },
-            },
-            role: { type: String, enum: [ "USER", "ADMIN" ], default: 'USER' },
-            status: { type: String, enum: [ "ACTIVE", "INACTIVE", "BLOCKED" ], default: 'ACTIVE' },
+            socialLinks: { type: Array },
+            role: { type: String, default: 'USER' },
+            status: { type: String, default: 'ACTIVE' },
         }, { timestamps: true })
 
         this.schema.plugin(mongooseUniqueValidator, { type: 'mongoose-unique-validator' });

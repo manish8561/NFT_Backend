@@ -1,8 +1,7 @@
 import mongoose, { Mongoose, Schema } from "mongoose";
 import mongooseUniqueValidator from 'mongoose-unique-validator';
-import * as Interfaces from '../../interfaces';
 
-class CollectionSchema extends Schema<Interfaces.Collection> implements Interfaces.Collection {
+class CollectionSchema extends Schema {
    
     public schema!: mongoose.Schema;
 
@@ -10,25 +9,6 @@ class CollectionSchema extends Schema<Interfaces.Collection> implements Interfac
         super();
         this.createSchema();
     }
-
-    name: string = "";
-    externalLink: string = "";
-    description: string = "";
-    logo: string = "";
-    banner: string = "";
-    featuredBanner: string = "";
-    category: string = "";
-    links: string[] = [];
-    royality: string = "";
-    payoutWalletAddress: string = "";
-    collaborators: string[] = [];
-    blockChain: string = "";
-    displayTheme: string = "";
-    paymentToken: string[] = [];
-    sensitiveContent: string = "";
-    status: string = "";
-    user: mongoose.Types.ObjectId | any = '';
-
 
     private createSchema() {
         this.schema = new Schema({

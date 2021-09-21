@@ -6,14 +6,14 @@ class UserModel {
 
     constructor() { }
 
-    public async loginUserOrMaybeRegister(_user: Interfaces.User): Promise<Interfaces.User | any> {
+    public async loginUserOrMaybeRegister(_user: any): Promise<any> {
         const { Validate: { _validations }, Response: { errors } } = Helper;
 
         try {
             const { walletAddress, wallet, networkId } = _user;
             const isError = await _validations({ walletAddress, wallet, networkId });
             if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
-            let isRegistered: Interfaces.User = await this._isUserAddressExists(walletAddress);
+            let isRegistered = await this._isUserAddressExists(walletAddress);
             if (isRegistered) return isRegistered;
             return await this._createNewUser(_user);
         } catch (error) {
@@ -21,7 +21,7 @@ class UserModel {
         }
     }
 
-    private async _createNewUser(_user: Interfaces.User): Promise<Interfaces.User | any> {
+    private async _createNewUser(_user: any): Promise<any> {
         const { Response: { errors } } = Helper;
 
         try {
@@ -32,11 +32,11 @@ class UserModel {
         }
     }
 
-    private async _isUserAddressExists(walletAddress: string): Promise<Interfaces.User | any>  {
+    private async _isUserAddressExists(walletAddress: string): Promise<any>  {
         return await User.findOne({ walletAddress });
     }
 
-    public async generateJwtToken(user: Interfaces.User | any): Promise<string> {
+    public async generateJwtToken(user: any): Promise<string> {
         const { Utilities: { generateJwt } } = Helper;
         const { _id, walletAddress, role } = user;
         return await generateJwt({ walletAddress, _id, role });
