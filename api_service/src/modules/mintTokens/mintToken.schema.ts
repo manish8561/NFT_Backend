@@ -21,4 +21,4 @@ class MintTokenSchema extends Schema {
     }
 }
 
-export default mongoose.model('MintTokens', new MintTokenSchema().schema);
+export default mongoose.model('MintToken', new MintTokenSchema().schema);
