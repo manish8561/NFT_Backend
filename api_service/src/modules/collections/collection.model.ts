@@ -14,8 +14,6 @@ class CollectionModel {
 
         try {
             let { page, limit, filters, user } = query;
-            console.log(filters);
-
             return await Collection.find({ user }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
         } catch (error) {
             return errors(SOMETHING_WENT_WRONG, error);
