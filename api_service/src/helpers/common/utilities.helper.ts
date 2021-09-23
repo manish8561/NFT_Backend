@@ -15,7 +15,6 @@ class Utilities {
      */
     public async generateJwt(jwtData: object): Promise<any> {
         const secret: any = process.env.JWTSECRET;
-
         try {
             return await jwt.sign(jwtData, secret, { expiresIn: ONE_DAY });
         } catch (error) {

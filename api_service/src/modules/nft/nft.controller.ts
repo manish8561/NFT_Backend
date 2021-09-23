@@ -26,12 +26,12 @@ class NftController implements Interfaces.Controller {
         } = Helper;
 
         try {
-            const { _id } = req.user!;
+            
             if (!req.body) {
                 return sendError(res, { status: 400, error: {message: NO_DATA} });
             }
             let _data = req.body;
-            _data.user = _id;
+            _data.user = req.user!;
 
             const result = await NftModel.add(_data);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });

@@ -8,7 +8,8 @@ export const ResMsg = {
     },
     collection: {
         CREATE_COLLECTION: "Collection has been created successfully..!!",
-        COLLECTION_IS_ALREADY_CREATED: "Collection is already exists in records..!!"
+        COLLECTION_IS_ALREADY_CREATED: "Collection is already exists in records..!!",
+        EXTERNAL_LINK_IS_ALREADY_IN_USE: "External Link is already in use."
     },
     nft: {
         CREATE: "NFT has been created successfully..!!",

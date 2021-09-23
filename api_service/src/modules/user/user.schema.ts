@@ -1,6 +1,5 @@
 import mongoose, { Mongoose, Schema } from "mongoose";
 import mongooseUniqueValidator from 'mongoose-unique-validator';
-import * as Interfaces from '../../interfaces';
 
 class UserSchema extends Schema {
     public schema!: mongoose.Schema;
@@ -15,7 +14,7 @@ class UserSchema extends Schema {
             wallet: { type: String, trim: true, default: "METAMASK" },
             walletAddress: { type: String, unique: true, index: true, trim: true, required: true },
             networkId: { type: String, required: true },
-            username: { type: String, unique: true, index: true, trim: true },
+            username: { type: String, index: true, trim: true },
             email: { type: String, unique: true, trim: true },
             bio: { type: String, default: "" },
             socialLinks: { type: Array },
