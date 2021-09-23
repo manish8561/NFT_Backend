@@ -24,7 +24,10 @@ class TransactionController implements Interfaces.Controller {
     private async add(req: Request, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
-            let result = await TransactionModel.add(req.body, req.user);
+            
+            const data = req.body;
+            data.user = req.user;
+            let result = await TransactionModel.add(data);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
@@ -34,7 +37,9 @@ class TransactionController implements Interfaces.Controller {
     private async list(req: Request, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
-            let result = await TransactionModel.list(req.body, req.user);
+            const data = req.body;
+            data.user = req.user;
+            let result = await TransactionModel.list(data);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {

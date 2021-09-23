@@ -7,12 +7,12 @@ class TransactionModel {
      * @param  {any} data
      * @returns Promise
      */
-    public async add(data: any, user: any): Promise<any> {
+    public async add(data: any): Promise<any> {
         try {
             const transaction:any = new Transaction();
 
-            transaction.user = user['_id'];
-            transaction.walletAddress=user['walletAddress'];
+            transaction.user = data.user['_id'];
+            transaction.walletAddress=data.user['walletAddress'];
             // nft:{type:Schema.Types.ObjectId, ref: 'nft'},
             transaction.nftAddress = data.nftAddress;
             transaction.networkId = data.networkId;
@@ -33,13 +33,13 @@ class TransactionModel {
      * @param  {any} data
      * @returns Promise
      */
-    public async list(data: any, user: any): Promise<any> {
+    public async list(data: any): Promise<any> {
         try {
             let {filters, page, limit } = data;
            
             let query:any = {};
-            if(user.role === 'user'){
-                query.user = user['_id'];
+            if(data.user.role === 'user'){
+                query.user = data.user['_id'];
             }
             if(!page){
                 page = 1;

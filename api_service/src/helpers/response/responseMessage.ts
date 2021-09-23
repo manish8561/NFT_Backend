@@ -1,4 +1,7 @@
 export const ResMsg = {
+    common:{
+        NO_DATA: "No data posted",
+    },
     auth: {
         SUCCESS: "Logged in successfully",
         BLOCKED: "Your account has been blocked.!!'"
@@ -6,6 +9,9 @@ export const ResMsg = {
     collection: {
         CREATE_COLLECTION: "Collection has been created successfully..!!",
         COLLECTION_IS_ALREADY_CREATED: "Collection is already exists in records..!!"
+    },
+    nft: {
+        CREATE: "NFT has been created successfully..!!",
     },
     errors: {
         ALL_FIELDS_ARE_REQUIRED: "Error,,!! All fields are required.",

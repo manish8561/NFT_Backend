@@ -1,7 +1,7 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import mongooseUniqueValidator from 'mongoose-unique-validator';
 
-class CollectionSchema extends Schema {
+class NftSchema extends Schema {
    
     public schema!: mongoose.Schema;
 
@@ -12,26 +12,25 @@ class CollectionSchema extends Schema {
 
     private createSchema() {
         this.schema = new Schema({
+            nftAddress: {type: String, required:true, trim:true},
             name: { type: String, required: true },
-            logo: { type: String, required: true },
+            fileHash: { type: String, required: true },
             externalLink: { type: String, default: "" },
             description: { type: String, default: "" },
-            banner: { type: String, default: "" },
-            featuredBanner: { type: String, default: "" },
-            links: { type: Array },
+            tokenUri: { type: String, default: "" },
+            supply: { type: Number, default: 1 },
             royality: { type: Number, max: 100, min: 0, required: true },
-            payoutWalletAddress: { type: String, required: true },
-            collaborators: { type: Array, required: true },
-            blockChain: { type: String },
-            displayTheme: { type: String},
-            paymentToken: { type: String  },
+            networkId: { type: String, required: true },
+            blockchain: { type: String },
             sensitiveContent: { type: String },
             status: { type: String, default: 'ACTIVE' },
-            user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+            tokenId: {type: Number, default: 0},
+            owner:{type: mongoose.Schema.Types.ObjectId,ref: "User", required: true },
+            creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         }, { timestamps: true })
 
         this.schema.plugin(mongooseUniqueValidator, { type: 'mongoose-unique-validator' });
     }
 }
 
-export default mongoose.model('Collection', new CollectionSchema().schema);
+export default mongoose.model('Collection', new NftSchema().schema);
