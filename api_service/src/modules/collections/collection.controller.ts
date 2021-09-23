@@ -7,7 +7,7 @@ import ValidateJWT from "../../middlewares/jwt.middleware";
 
 class CollectionController implements Interfaces.Controller {
    
-    public path = "/user";
+    public path = "/collection";
     public router = Router();
 
     constructor() {
@@ -18,6 +18,7 @@ class CollectionController implements Interfaces.Controller {
             .all(`${this.path}/*`)
             .post(`${this.path}/createCollection`, ValidateJWT, this.createCollection)
             .get(`${this.path}/getCollections`, ValidateJWT, this.getCollections         )
+            .get(`${this.path}/isSlugExisted`, ValidateJWT, this.isSlugExisted         )
     }
 
     private async createCollection(req: Request, res: Response, next: NextFunction) {
@@ -57,6 +58,23 @@ class CollectionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
+
+    private async isSlugExisted(req: Request, res: Response, next: NextFunction) {
+        const { 
+            Response: { sendError, sendSuccess },
+            ResMsg: { collection: { CREATE_COLLECTION } }
+        } = Helper;
+
+        try {
+            const query: any = req.query!;
+            const result = await CollectionModel.isExternalLinkExist(query);
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { message: CREATE_COLLECTION });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }
+    
 }
 
 export default CollectionController;
