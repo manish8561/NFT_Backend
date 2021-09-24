@@ -15,8 +15,7 @@ class NftController implements Interfaces.Controller {
     private async initializeRoutes() {
         this.router
             .all(`${this.path}/*`)
-            // .post(`${this.path}/add`, ValidateJWT, this.add)
-            .post(`${this.path}/add`, this.add)
+            .post(`${this.path}/add`, ValidateJWT, this.add)
     }
 
     private async add(req: Request, res: Response, next: NextFunction) {
@@ -24,14 +23,15 @@ class NftController implements Interfaces.Controller {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { CREATE }, common: { NO_DATA } }
         } = Helper;
+        try {     
+            const { _id } = req.user!;
+            let _data = req.body;
+            _data.user = req.user!;
+           
 
-        try {
-            
             if (!req.body) {
                 return sendError(res, { status: 400, error: {message: NO_DATA} });
             }
-            let _data = req.body;
-            _data.user = req.user!;
 
             const result = await NftModel.add(_data);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });

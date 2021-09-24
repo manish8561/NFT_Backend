@@ -21,7 +21,7 @@ class CollectionSchema extends Schema {
             links: { type: Array },
             royality: { type: Number, max: 100, min: 0, required: true },
             payoutWalletAddress: { type: String, required: true },
-            collaborators: { type: Array, required: true },
+            collaborators: { type: Array },
             blockChain: { type: String },
             displayTheme: { type: String},
             paymentToken: { type: String  },

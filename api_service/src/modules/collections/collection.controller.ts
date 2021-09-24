@@ -33,7 +33,7 @@ class CollectionController implements Interfaces.Controller {
             _collection.user = _id;
 
             const result = await CollectionModel.createCollection(_collection);
-            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: CREATE_COLLECTION });
         } catch (error: any) {
             return sendError(res, { status: 400, error });

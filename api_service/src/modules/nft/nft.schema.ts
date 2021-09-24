@@ -17,18 +17,17 @@ class NftSchema extends Schema {
             fileHash: { type: String, required: true },//file uploaded to ipfs
             externalLink: { type: String, default: "" },
             description: { type: String, default: "" },
-            tokenUri: { type: String, default: "" },//for meta data
+            tokenUri: { type: String, required:true, unique: true },//for meta data
             supply: { type: Number, default: 1 },
             royality: { type: Number, max: 100, min: 0, required: true },
             networkId: { type: String, required: true },
-            blockchain: { type: String },
             status: { type: String, default: 'ACTIVE' },
             tokenId: {type: Number, default: 0},
             owner:{type: Schema.Types.ObjectId,ref: "User", required: true },
             creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
-            collection: { type: Schema.Types.ObjectId, ref: "Collection", required: true },
+            collectiondb: { type: Schema.Types.ObjectId, ref: "Collection", required: true },
         }, { timestamps: true })
     }
 }
 
-export default mongoose.model('nft', new NftSchema().schema);
+export default mongoose.model('Nft', new NftSchema().schema);
