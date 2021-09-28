@@ -1,5 +1,6 @@
 import { Helper } from '../../helpers';
 import Nft from './nft.schema';
+import TransactionModel from '../transaction/transaction.model';
 
 class NftModel {
 
@@ -14,7 +15,7 @@ class NftModel {
             }
         } = Helper;
         try {
-            const {user, name, description, nftAddress, fileType, fileHash, externalLink, tokenUri, supply, royality, networkId, status, tokenId, collectiondb } = _nft;
+            const { user, name, description, nftAddress, fileType, fileHash, externalLink, tokenUri, supply, royality, networkId, status, tokenId, collectiondb, transactionHash } = _nft;
             const nft:any = new Nft();
             nft.owner = user['_id'];
             nft.creator = user['_id'];
@@ -31,14 +32,24 @@ class NftModel {
             nft.networkId = networkId;
             nft.tokenId = tokenId;
             nft.collectiondb = collectiondb;
-
-            return await nft.save();
+            const saveData = await nft.save();
+            const data = {
+                user,
+                nftAddress: nft.nftAddress,
+                nft: saveData['_id'],
+                networkId: nft.networkId,
+                transactionType: 'MINT',
+                status: nft.status,
+                token: 'eth',
+                amount: 0,
+                transactionHash
+            }
+            TransactionModel.add(data);
+            return saveData;
         } catch (error) {
             throw error;
         }
     }
-
-  
 }
 
 export default new NftModel();
