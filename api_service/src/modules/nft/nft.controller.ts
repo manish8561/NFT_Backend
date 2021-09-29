@@ -16,6 +16,7 @@ class NftController implements Interfaces.Controller {
         this.router
             .all(`${this.path}/*`)
             .post(`${this.path}/add`, ValidateJWT, this.add)
+            .get(`${this.path}/getNft/:id`, ValidateJWT, this.getNFTDetail)
     }
 
     private async add(req: Request, res: Response, next: NextFunction) {
@@ -39,6 +40,23 @@ class NftController implements Interfaces.Controller {
         }
     }
 
+    private async getNFTDetail(req: Request, res: Response, next: NextFunction) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { nft: { GET_NFT_DETAIL }}
+        } = Helper;
+        try {
+            const id: any = req.params.id
+            if(!id) {
+                return sendError(res, { status: 400, error: {message: 'nftId is missing'} });
+            }
+            const result: any = await NftModel.getNFT(id);
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { data: result, message: GET_NFT_DETAIL });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }
 }
 
 export default NftController;

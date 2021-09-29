@@ -26,7 +26,7 @@ class TransactionModel {
             const r = await transaction.save();
             return r['_id'];
         } catch (error) {
-            return error;
+            throw error;
         }
     }
     /**

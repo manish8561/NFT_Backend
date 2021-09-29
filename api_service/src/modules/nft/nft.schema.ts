@@ -21,11 +21,12 @@ class NftSchema extends Schema {
             supply: { type: Number, default: 1 },
             royality: { type: Number, max: 100, min: 0, required: true },
             networkId: { type: String, required: true },
-            status: { type: String, default: 'ACTIVE' },
+            status: { type: String, enum:['PROCESSING', "COMPLETED" ], default: 'PROCESSING' },
             tokenId: {type: Number, default: 0},
             owner:{type: Schema.Types.ObjectId,ref: "User", required: true },
             creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
             collectiondb: { type: Schema.Types.ObjectId, ref: "Collection", required: true },
+            transactionHash: { type: String, required: true }
         }, { timestamps: true })
     }
 }
