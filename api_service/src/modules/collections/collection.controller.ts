@@ -23,7 +23,7 @@ class CollectionController implements Interfaces.Controller {
             .get(`${this.path}/isSlugExisted`, ValidateJWT, this.isSlugExisted)
     }
 
-    private async add(req: Request, res: Response, next: NextFunction) {
+    private async add(req: any, res: Response, next: NextFunction) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { collection: { CREATE_COLLECTION } }
@@ -42,7 +42,7 @@ class CollectionController implements Interfaces.Controller {
         }
     }
 
-    private async getCollections(req: Request, res: Response, next: NextFunction) {
+    private async getCollections(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { collection: { CREATE_COLLECTION } }

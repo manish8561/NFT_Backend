@@ -29,6 +29,11 @@ class TransactionModel {
             throw error;
         }
     }
+
+    public async setTransactionStatus(data: any): Promise<any> {
+        const { transactionHash , status } = data;
+        return Transaction.updateOne({ transactionHash }, { $set: { status }});
+    }
     /**
      * @param  {any} data
      * @returns Promise

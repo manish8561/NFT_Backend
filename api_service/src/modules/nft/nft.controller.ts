@@ -19,7 +19,7 @@ class NftController implements Interfaces.Controller {
             .get(`${this.path}/getNft/:id`, ValidateJWT, this.getNFTDetail)
     }
 
-    private async add(req: Request, res: Response, next: NextFunction) {
+    private async add(req: any, res: Response, next: NextFunction) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { CREATE }, common: { NO_DATA } }
@@ -40,7 +40,7 @@ class NftController implements Interfaces.Controller {
         }
     }
 
-    private async getNFTDetail(req: Request, res: Response, next: NextFunction) {
+    private async getNFTDetail(req: any, res: Response, next: NextFunction) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { GET_NFT_DETAIL }}

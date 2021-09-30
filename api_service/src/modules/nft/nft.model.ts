@@ -69,12 +69,14 @@ class NftModel {
                     if(result && result.status) {
                         nft.status = 'COMPLETED';
                         nft.save();
+                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'COMPLETED'});
                         return {
                             data : nft,
                             status : 1,
                             message : 'Transaction completed'
                         };
                     } else if(result === null) {
+                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'PROCESSING'});
                         return {
                             data: {},
                             status: 0,
@@ -83,6 +85,7 @@ class NftModel {
                     } else if(result && !result.status) {
                         nft.status = 'FAILED';
                         nft.save();
+                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'FAILED'});
                         return {
                             data : {},
                             status: 2,
@@ -105,7 +108,6 @@ class NftModel {
             throw error;
         }
     }
-
 }
 
 export default new NftModel();

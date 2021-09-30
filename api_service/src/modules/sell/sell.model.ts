@@ -78,12 +78,14 @@ class SellModel {
                     if(result && result.status) {
                         nft.transactionStatus = 'COMPLETED';
                         nft.save();
+                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'COMPLETED'});
                         return {
                             data : nft,
                             status : 1,
                             message : 'Transaction completed'
                         };
                     } else if(result == null) {
+                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'PROCESSING'});
                         return {
                             data: {},
                             status: 0,
@@ -94,6 +96,7 @@ class SellModel {
                         nft.transactionStatus = 'FAILED';
                         nft.status = 'INACTIVE';
                         nft.save();
+                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'FAILED'});
                         return {
                             data : {},
                             status: 2,
@@ -106,6 +109,7 @@ class SellModel {
                     if((new Date(nft.expirationDate).getTime()) <= Date.now()) {
                         nft.transactionStatus = 'FAILED';
                         nft.status = 'INACTIVE';
+                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'FAILED'});
                         nft.save();
                         return {
                             data : {},

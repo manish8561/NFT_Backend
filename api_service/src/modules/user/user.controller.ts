@@ -30,7 +30,7 @@ class UserController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             const token: string = await UserModel.generateJwtToken(result);
             result = { user: result };
-            return sendSuccess(res, { message: 'SUCCESS', data: result, token });
+            return sendSuccess(res, { message: 'SUCCESS', token });
         } catch (error: any) {
             return sendError(res, { status: 400, error });
         }
@@ -39,15 +39,17 @@ class UserController implements Interfaces.Controller {
      * @param  {Request} req
      * @param  {Response} res
      */
-    private async details(req: Request, res: Response) {
+    private async details(req: any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
 
         try {
             const { _id } = req.user!;
+            console.log('hihihihhi')
             let result = await UserModel.details(_id);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
+            console.log(error,'controller')
             return sendError(res, { status: 400, error });
         }
     }

@@ -20,7 +20,7 @@ class SellController implements Interfaces.Controller {
             .get(`${this.path}/getSellNft/:id`, ValidateJWT, this.getSellNftDetails)
     }
 
-    private async sell_Item(req: Request, res: Response, next: NextFunction) {
+    private async sell_Item(req: any, res: Response, next: NextFunction) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { SELL_NFT } }
@@ -36,7 +36,7 @@ class SellController implements Interfaces.Controller {
         }
     }
 
-    private async getSellNftDetails(req: Request, res: Response, next: NextFunction) {
+    private async getSellNftDetails(req: any, res: Response, next: NextFunction) {
         const {
             Response: { sendError, sendSuccess }
         } = Helper;

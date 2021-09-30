@@ -22,7 +22,7 @@ class TransactionSchema extends Schema {
             transactionType: { type: String, trim: true },
             token: { type: String, default:'eth'},
             amount : {type: String, default:'0'}, //due to decimals places
-            status: { type: String, enum: [ "PENDING", "ERROR", "REJECTED","COMPLETE", "PROCESSING" ], 
+            status: { type: String, enum: [ "PENDING", "ERROR", "FAILED","COMPLETED", "PROCESSING" ], 
             default: 'PENDING' },
         }, { timestamps: true })
 
