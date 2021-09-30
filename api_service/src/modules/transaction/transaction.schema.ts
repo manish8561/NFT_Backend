@@ -15,14 +15,14 @@ class TransactionSchema extends Schema {
         this.schema = new Schema({
             user:{ type: Schema.Types.ObjectId, ref: 'User'},
             walletAddress: { type: String, index: true, trim: true, required: true },
-            nft:{type:Schema.Types.ObjectId, default:null}, //nft
+            nft:{type:Schema.Types.ObjectId, ref: 'nft'}, //nft
             nftAddress: { type: String, index: true, trim: true},
             networkId: { type: String, required: true },
             transactionHash: {type: String, default:""},
             transactionType: { type: String, trim: true },
             token: { type: String, default:'eth'},
             amount : {type: String, default:'0'}, //due to decimals places
-            status: { type: String, enum: [ "PENDING", "ERROR", "REJECTED","COMPLETE", "PROCESSING" ], 
+            status: { type: String, enum: [ "PENDING", "ERROR", "FAILED","COMPLETED", "PROCESSING" ], 
             default: 'PENDING' },
         }, { timestamps: true })
 

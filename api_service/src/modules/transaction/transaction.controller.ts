@@ -21,7 +21,7 @@ class TransactionController implements Interfaces.Controller {
             .post(`${this.path}/list`, ValidateJWT, this.list)
     }
 
-    private async add(req: Request, res: Response) {
+    private async add(req: any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
             
@@ -34,7 +34,7 @@ class TransactionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-    private async list(req: Request, res: Response) {
+    private async list(req: any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
             const data = req.body;

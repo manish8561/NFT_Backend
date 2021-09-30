@@ -18,10 +18,12 @@ class CollectionController implements Interfaces.Controller {
             .all(`${this.path}/*`)
             .post(`${this.path}/add`, ValidateJWT, this.add)
             .post(`${this.path}/getCollections`, ValidateJWT, this.getCollections)
+            .post(`${this.path}/getItemsByCollectionId`, ValidateJWT, this.getItemsById)
+            .post(`${this.path}/:id`, ValidateJWT, this.collectionByIdData)
             .get(`${this.path}/isSlugExisted`, ValidateJWT, this.isSlugExisted)
     }
 
-    private async add(req: Request, res: Response, next: NextFunction) {
+    private async add(req: any, res: Response, next: NextFunction) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { collection: { CREATE_COLLECTION } }
@@ -40,7 +42,7 @@ class CollectionController implements Interfaces.Controller {
         }
     }
 
-    private async getCollections(req: Request, res: Response, next: NextFunction) {
+    private async getCollections(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { collection: { CREATE_COLLECTION } }
@@ -51,6 +53,39 @@ class CollectionController implements Interfaces.Controller {
             data.user= req.user!;
             const result = await CollectionModel.getCollection(data);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { data: result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }
+
+    private async collectionByIdData(req: Request, res: Response, next: NextFunction) {
+        const {
+            Response: { sendError, sendSuccess }
+        } = Helper;
+
+        try {
+            const id: any = req.params.id;
+            const result = await CollectionModel.getCollectionDataById(id);
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { data: result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }
+
+    private async getItemsById(req: Request, res: Response, next: NextFunction) {
+        const {
+            Response: { sendError, sendSuccess }
+        } = Helper;
+        try {
+            const error = { message:'Enter complete parameters' };
+
+            if(Object.keys(req.body).length <= 0) {
+                return sendError(res, { status: 400, error })
+            }
+            const result = await CollectionModel.getItemsByCollectionId(req.body);
+            if(result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { data: result });
         } catch (error: any) {
             return sendError(res, { status: 400, error });

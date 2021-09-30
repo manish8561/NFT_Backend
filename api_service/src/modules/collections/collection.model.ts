@@ -1,6 +1,7 @@
 import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import Collection from './collection.schema';
+import Nft from '../nft/nft.schema';
 
 class CollectionModel {
 
@@ -9,6 +10,38 @@ class CollectionModel {
      * @param  {any} data
      * @returns Promise
      */
+
+    public async getItemsByCollectionId(data: any): Promise<any> {
+        const { 
+            Response: { errors },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG } }
+        } = Helper;
+
+        try {
+            let { page, limit, id } = data;
+            const count = await Nft.countDocuments({collectiondb:id});
+            if(count === 0){
+                return {
+                    count:0,
+                    items:[]
+                }
+            }
+            if(!page){
+                page = 1;
+            }
+            if(!limit){
+                limit = 10;
+            }
+            const items =await Nft.find({ collectiondb:id }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
+            return {
+                count,
+                items
+            };
+        } catch (error) {
+            return errors(SOMETHING_WENT_WRONG, error);
+        }
+    }
+
     public async getCollection(data: any): Promise<any> {
         const { 
             Response: { errors },
@@ -20,6 +53,19 @@ class CollectionModel {
             return await Collection.find({user:data.user['_id']}).sort({ createdAt: -1 });
             // return await Collection.find({ user }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
         } catch (error) {
+            return errors(SOMETHING_WENT_WRONG, error);
+        }
+    }
+
+    public async getCollectionDataById(id: any): Promise<any> {
+        const { 
+            Response: { errors },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG } }
+        } = Helper;
+
+        try {
+            return await Collection.find({ _id: id });
+        } catch(error: any) {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }

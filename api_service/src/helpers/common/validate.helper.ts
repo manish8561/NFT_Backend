@@ -21,6 +21,10 @@ class Validate {
                 }
             }
 
+            if ((obj[key] == "")) {
+                _errors[key] = `${key} is required.`;
+            }
+
             if ((obj[key] === undefined) || (obj[key] === null)) {
                 _errors[key] = `${key} is required.`;
             }

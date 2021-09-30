@@ -11,8 +11,8 @@ class UserModel {
      */
     public async loginUserOrMaybeRegister(_user: any): Promise<any> {
         const { Validate: { _validations }, Response: { errors } } = Helper;
-
         try {
+            _user.walletAddress=_user.walletAddress.toLowerCase();
             const { walletAddress, wallet, networkId } = _user;
             const isError = await _validations({ walletAddress, wallet, networkId });
             if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
@@ -29,12 +29,12 @@ class UserModel {
      */
     private async _createNewUser(_user: any): Promise<any> {
         const { Response: { errors } } = Helper;
-
+        
         try {
             const createUser: any = new User({ ..._user });
             return createUser;
         } catch (error) {
-            console.log(error);
+            console.log(error, 'insert');
 
             return errors('SOMETHING_WENT_WRONG', error);
         }
