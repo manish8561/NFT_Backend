@@ -1,3 +1,4 @@
+import { Helper } from '../../helpers';
 import Transaction from './transaction.schema';
 
 class TransactionModel {
@@ -60,6 +61,30 @@ class TransactionModel {
             .skip((limit * (page -1))).limit(limit);
         } catch (error) {
             return error;
+        }
+    }
+
+    public async getTransactionByNftId(data: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG } }
+        } = Helper;
+        try {
+            let { page, limit, id } = data;
+            const isError = await _validations({_id: id});
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            if(!page){
+                page = 1;
+            }
+            if(!limit){
+                limit = 10;
+            }
+            const v =  await Transaction.find({ user:id, status:"COMPLETED" }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
+            console.log('vvvvvvvvvvvvvvvvvvvv',v);
+            return v
+        } catch(error) {
+
         }
     }
 

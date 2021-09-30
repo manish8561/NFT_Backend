@@ -16,7 +16,7 @@ class NftController implements Interfaces.Controller {
         this.router
             .all(`${this.path}/*`)
             .post(`${this.path}/add`, ValidateJWT, this.add)
-            .get(`${this.path}/getNft/:id`, ValidateJWT, this.getNFTDetail)
+            .get(`${this.path}/getNft/:id`, this.getNFTDetail)
     }
 
     private async add(req: any, res: Response, next: NextFunction) {

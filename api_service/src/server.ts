@@ -5,7 +5,8 @@ import Controllers from './modules';
 
 ( async () => {
   /* Process Enviroment */  
-  const isStarted: boolean = await Config();
+  const isStarted: boolean =  Config();
+  console.log("=========",isStarted)
   if (isStarted) {
     /* Initializing Application */
     const app = new App(Controllers);

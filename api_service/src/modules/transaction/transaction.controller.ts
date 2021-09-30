@@ -19,6 +19,7 @@ class TransactionController implements Interfaces.Controller {
             .all(`${this.path}/*`)
             .post(`${this.path}/add`, ValidateJWT, this.add)
             .post(`${this.path}/list`, ValidateJWT, this.list)
+            .post(`${this.path}/getTransactionByNftId`, ValidateJWT, this.getTransactionByNftId )
     }
 
     private async add(req: any, res: Response) {
@@ -43,6 +44,22 @@ class TransactionController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }
+
+    private async getTransactionByNftId(req: any, res: Response) {
+        const { Response: { sendError, sendSuccess } } = Helper;
+        try {
+            const error = { message:'Enter complete parameters' };
+
+            if(Object.keys(req.body).length <= 0) {
+                return sendError(res, { status: 400, error })
+            }
+            const result = await TransactionModel.getTransactionByNftId(req.body);
+            if(result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { data: result });
+        } catch(error: any) {
             return sendError(res, { status: 400, error });
         }
     }

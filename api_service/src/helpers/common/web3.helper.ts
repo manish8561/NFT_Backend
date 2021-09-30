@@ -1,7 +1,7 @@
 import Web3 from "web3";
 
 class Web3Helper {
-    private INFURA_API = process.env.INFURA_API!;
+    private INFURA_API: any;
     private web3Object: any;
     private contractObject: any;
     private currentContractAddress: string = '';
@@ -19,6 +19,7 @@ class Web3Helper {
             return this.web3Object;
         }
         try {
+            console.log(this.INFURA_API);
             this.web3Object = new Web3('https://rinkeby.infura.io/v3/c2a613915ac3440fa2cd778ff5ade299');
             return this.web3Object;
         } catch (error: any) {
