@@ -18,6 +18,7 @@ class UserModel {
             if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
             let isRegistered = await this._isUserAddressExists(walletAddress);
             if (isRegistered) return isRegistered;
+            console.log('ENTERRRRR');
             return await this._createNewUser(_user);
         } catch (error) {
             return errors('SOMETHING_WENT_WRONG', error);
@@ -32,6 +33,7 @@ class UserModel {
         
         try {
             const createUser: any = new User({ ..._user });
+            await createUser.save();
             return createUser;
         } catch (error) {
             console.log(error, 'insert');
