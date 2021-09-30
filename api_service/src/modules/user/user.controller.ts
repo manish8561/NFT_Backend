@@ -44,12 +44,10 @@ class UserController implements Interfaces.Controller {
 
         try {
             const { _id } = req.user!;
-            console.log('hihihihhi')
             let result = await UserModel.details(_id);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
-            console.log(error,'controller')
             return sendError(res, { status: 400, error });
         }
     }

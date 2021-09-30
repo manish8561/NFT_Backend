@@ -14,7 +14,8 @@ export const ResMsg = {
     nft: {
         CREATE: "NFT has been created successfully..!!",
         SELL_NFT: "Your item has been listed successfully",
-        GET_NFT_DETAIL: "Fetch detail successfully"
+        GET_NFT_DETAIL: "Fetch detail successfully",
+        BUY_NFT: "Buy item successfully"
     },
     errors: {
         ALL_FIELDS_ARE_REQUIRED: "Error,,!! All fields are required.",

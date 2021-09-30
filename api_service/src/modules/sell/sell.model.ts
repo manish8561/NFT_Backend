@@ -15,7 +15,6 @@ class SellModel {
             }
         } = Helper;
         try {
-            console.log(data);
             const { nftAddress, sellType, price, user, owner, minimumBid, reservePrice, token, networkId, endingPrice, expirationDate, futureDate, allowedBuyerAddress, transactionHash } = data;
             const isError = await _validations({ nftAddress, sellType, price });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);

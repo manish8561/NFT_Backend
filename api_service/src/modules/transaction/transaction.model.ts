@@ -9,6 +9,7 @@ class TransactionModel {
      */
     public async add(data: any): Promise<any> {
         try {
+            data.user.walletAddress= data.user.walletAddress.toLowerCase();
             const transaction:any = new Transaction();
 
             transaction.user = data.user['_id'];

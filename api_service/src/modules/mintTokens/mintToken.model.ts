@@ -27,7 +27,9 @@ class MintTokenModel {
     public async uploadFile(data: any): Promise<any> {
         try {
             const { file } = data;
-            return `${process.env.API_URL}${file['path']}`;
+            // return `${process.env.API_URL}${file['path']}`;
+            return `http://10.1.1.143:3001${file['path']}`;
+
         } catch (error) {
             const { Response: { errors }, ResMsg: { errors: { SOMETHING_WENT_WRONG } } } = Helper;
             return errors(SOMETHING_WENT_WRONG, error);
