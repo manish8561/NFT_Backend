@@ -6,7 +6,11 @@ import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
 
 class CollectionController implements Interfaces.Controller {
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> 29dc5be5ab53d8a9fc04a0de6de8cfd606520514
     public path = "/collection";
     public router = Router();
 

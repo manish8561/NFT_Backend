@@ -1,5 +1,5 @@
 export const ResMsg = {
-    common:{
+    common: {
         NO_DATA: "No data posted",
     },
     auth: {
