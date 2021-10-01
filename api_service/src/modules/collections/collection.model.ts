@@ -50,6 +50,7 @@ class CollectionModel {
 
         try {
             // let { page, limit, filters, user } = query;
+            console.log('***********    ',data)
             return await Collection.find({user:data.user['_id']}).sort({ createdAt: -1 });
             // return await Collection.find({ user }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
         } catch (error) {

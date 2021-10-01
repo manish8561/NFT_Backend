@@ -19,7 +19,6 @@ class Web3Helper {
             return this.web3Object;
         }
         try {
-            console.log(this.INFURA_API);
             this.web3Object = new Web3('https://rinkeby.infura.io/v3/c2a613915ac3440fa2cd778ff5ade299');
             return this.web3Object;
         } catch (error: any) {

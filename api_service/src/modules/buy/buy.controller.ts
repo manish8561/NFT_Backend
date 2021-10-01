@@ -27,7 +27,6 @@ class BuyController implements Interfaces.Controller {
         try {
             const data:any = req.body;
             data.user = req.user;
-            console.log(req.user);
             const result: any = await BuyModel.buyNewItem(data);
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: BUY_NFT });

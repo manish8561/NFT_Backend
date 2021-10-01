@@ -18,7 +18,6 @@ class BuyModel {
         } = Helper;
         try {
             const { nft, price, networkId, transactionHash, token, user, nftAddress  } = data;
-            console.log(data.user);
             const isError = await _validations({_id: nft, price, networkId, transactionHash, nftAddress });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             const buyNft: any = new Buy();

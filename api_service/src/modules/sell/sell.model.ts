@@ -44,7 +44,7 @@ class SellModel {
             const obj: any = {
                 user,
                 nftAddress: sellNft.nftAddress,
-                nft: data.user['_id'],
+                nft: data.nft,
                 networkId: sellNft.networkId,
                 transactionType: 'SELL',
                 status: 'PROCESSING',
@@ -69,7 +69,6 @@ class SellModel {
         } = Helper;
         try {
             const isError = await _validations({ _id})
-            console.log(_id);
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             const nft:any = await Sell.findOne({ nft:_id, status:'ACTIVE' });
             if(nft){

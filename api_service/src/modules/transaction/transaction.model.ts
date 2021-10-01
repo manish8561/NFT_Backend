@@ -16,6 +16,7 @@ class TransactionModel {
             transaction.user = data.user['_id'];
             transaction.walletAddress=data.user['walletAddress'];
             // nft:{type:Schema.Types.ObjectId, ref: 'nft'},
+            transaction.nft = data.nft;
             transaction.nftAddress = data.nftAddress;
             transaction.networkId = data.networkId;
             transaction.transactionHash = data.transactionHash;
@@ -80,9 +81,7 @@ class TransactionModel {
             if(!limit){
                 limit = 10;
             }
-            const v =  await Transaction.find({ user:id, status:"COMPLETED" }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
-            console.log('vvvvvvvvvvvvvvvvvvvv',v);
-            return v
+            return await Transaction.find({ nft: id, status: 'COMPLETED'}).skip(page-1).limit((page) * limit).sort({ createdAt: -1 });
         } catch(error) {
 
         }
