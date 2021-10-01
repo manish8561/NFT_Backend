@@ -33,7 +33,6 @@ class CollectionController implements Interfaces.Controller {
             const { _id } = req.user!;
             let _collection = req.body;
             _collection.user = _id;
-
             const result = await CollectionModel.createCollection(_collection);
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: CREATE_COLLECTION });
