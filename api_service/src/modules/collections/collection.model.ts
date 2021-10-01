@@ -92,7 +92,6 @@ class CollectionModel {
 
         try {
             let { name, externalLink, logo } = _collection;
-            console.log('*******************',_collection);
             const isError = await _validations({ name, logo });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             const isAlreadyCreated = await this._isCollectionCreated(name);
