@@ -12,27 +12,27 @@ class CollectionModel {
      */
 
     public async getItemsByCollectionId(data: any): Promise<any> {
-        const { 
+        const {
             Response: { errors },
             ResMsg: { errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
         try {
             let { page, limit, id } = data;
-            const count = await Nft.countDocuments({collectiondb:id});
-            if(count === 0){
+            const count = await Nft.countDocuments({ collectiondb: id });
+            if (count === 0) {
                 return {
-                    count:0,
-                    items:[]
+                    count: 0,
+                    items: []
                 }
             }
-            if(!page){
+            if (!page) {
                 page = 1;
             }
-            if(!limit){
+            if (!limit) {
                 limit = 10;
             }
-            const items =await Nft.find({ collectiondb:id }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
+            const items = await Nft.find({ collectiondb: id }).skip(page-1).limit(page * limit).sort({ createdAt: -1 });
             return {
                 count,
                 items
@@ -43,15 +43,14 @@ class CollectionModel {
     }
 
     public async getCollection(data: any): Promise<any> {
-        const { 
+        const {
             Response: { errors },
             ResMsg: { errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
         try {
             // let { page, limit, filters, user } = query;
-            console.log('***********    ',data)
-            return await Collection.find({user:data.user['_id']}).sort({ createdAt: -1 });
+            return await Collection.find({ user: data.user['_id'] }).sort({ createdAt: -1 });
             // return await Collection.find({ user }).skip(page).limit((page) * limit).sort({ createdAt: -1 });
         } catch (error) {
             return errors(SOMETHING_WENT_WRONG, error);
@@ -59,14 +58,14 @@ class CollectionModel {
     }
 
     public async getCollectionDataById(id: any): Promise<any> {
-        const { 
+        const {
             Response: { errors },
             ResMsg: { errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
         try {
             return await Collection.find({ _id: id });
-        } catch(error: any) {
+        } catch (error: any) {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }
@@ -82,20 +81,21 @@ class CollectionModel {
      * @returns Promise
      */
     public async createCollection(_collection: any): Promise<any> {
-        const { 
-            Validate: { _validations }, 
+        const {
+            Validate: { _validations },
             Response: { errors },
-            ResMsg: { 
+            ResMsg: {
                 collection: { COLLECTION_IS_ALREADY_CREATED, EXTERNAL_LINK_IS_ALREADY_IN_USE },
-                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG } 
+                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
             }
         } = Helper;
 
         try {
             let { name, externalLink, logo } = _collection;
+            console.log('*******************',_collection);
             const isError = await _validations({ name, logo });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
-            const isAlreadyCreated= await this._isCollectionCreated(name);
+            const isAlreadyCreated = await this._isCollectionCreated(name);
             if (isAlreadyCreated) return errors(COLLECTION_IS_ALREADY_CREATED, isAlreadyCreated);
 
             if (!externalLink) externalLink = name.split(" ").join("-");

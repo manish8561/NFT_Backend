@@ -27,7 +27,7 @@ class NftController implements Interfaces.Controller {
         try {     
             let _data = req.body;
             _data.user = req.user!;
-           
+           console.log('**********',req.body)
             if (!req.body) {
                 return sendError(res, { status: 400, error: {message: NO_DATA} });
             }
