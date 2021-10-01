@@ -46,6 +46,7 @@ class NftModel {
                 amount: 0,
                 transactionHash: transactionHash
             }
+
             TransactionModel.add(data);
             return saveData;
         } catch (error) {
@@ -62,7 +63,8 @@ class NftModel {
             }
         } = Helper;
         try {
-            const nft: any = await Nft.findOne({_id: id});
+            const nft: any = await Nft.findOne({_id: id}).populate('collectiondb', 'name').populate('creator','username walletAddress')
+            .populate('owner','username walletAddress');
             if(nft) {
                 if(nft.status == 'PROCESSING') {
                     const result = await Helper.Web3Helper.getTransactionStatus(nft.transactionHash);

@@ -17,7 +17,7 @@ class SellController implements Interfaces.Controller {
         this.router
             .all(`${this.path}/*`)
             .post(`${this.path}/sellItem`, ValidateJWT, this.sell_Item)
-            .get(`${this.path}/getSellNft/:id`, ValidateJWT, this.getSellNftDetails)
+            .get(`${this.path}/getSellNft/:id`, this.getSellNftDetails)
     }
 
     private async sell_Item(req: any, res: Response, next: NextFunction) {
