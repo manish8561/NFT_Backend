@@ -40,6 +40,52 @@ class UserModel {
             return errors('SOMETHING_WENT_WRONG', error);
         }
     }
+
+    public async updateUserProfile(data: any): Promise<any> {
+        const {
+            Validate: { _validations },
+            Response: { errors },
+            ResMsg: {
+                user: { UPDATE_USER, VERIFY_EMAIL },
+                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
+            }
+        } = Helper;
+        try {
+            const { user, email, username, bio, socialLinks } = data;
+            const isError = await _validations({ _id: user['_id'] });
+            let obj = {
+                username,
+                email,
+                bio,
+                socialLinks
+            };
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            return await User.updateOne({ _id: user['_id'] }, { $set : obj }, { upsert:false });
+ 
+        } catch(error: any) {
+            throw error;
+        }
+    }
+
+    public async updateUserVerifyStatus(data: any): Promise <any> {
+        const {
+            Validate: { _validations },
+            Response: { errors },
+            ResMsg: {
+                user: { UPDATE_USER_VERIFICATION_STATUS },
+                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
+            }
+        } = Helper;
+        try {
+            const { _id } = data;
+            const isError = await _validations({ _id });
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            return await User.updateOne({ _id }, { $set : { verificationStatus: true }}, { upsert:false });
+        } catch(error: any) {
+            throw error;
+        }
+    }
+
     /**
      * @param  {string} walletAddress
      * @returns Promise
