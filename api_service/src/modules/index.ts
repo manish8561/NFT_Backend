@@ -5,6 +5,8 @@ import UserController from "./user/user.controller";
 import CollectionController from "./collections/collection.controller";
 import SellController from "./sell/sell.controller";
 import BuyController from "./buy/buy.controller";
+import AdminController from "./admin/admin.controller";
+import CategoryController from "./categories/category.controller";
 
 export default [
     new WalletController(),
@@ -13,5 +15,7 @@ export default [
     new NftController(),
     new CollectionController(),
     new SellController(),
-    new BuyController()
+    new BuyController(),
+    new AdminController(),
+    new CategoryController()
 ]
