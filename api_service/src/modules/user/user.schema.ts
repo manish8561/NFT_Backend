@@ -14,7 +14,7 @@ class UserSchema extends Schema {
             wallet: { type: String, trim: true, default: "METAMASK" },
             walletAddress: { type: String, unique: true, trim: true, required: true },
             networkId: { type: String, required: true },
-            username: { type: String, trim: true },
+            username: { type: String, trim: true, default:null },
             email: { type: String, trim: true, default: "" },
             bio: { type: String, default: "" },
             socialLinks: { type: Array },
