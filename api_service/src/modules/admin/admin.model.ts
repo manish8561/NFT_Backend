@@ -1,4 +1,3 @@
-import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import User from '../user/user.schema';
 

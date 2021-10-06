@@ -5,7 +5,10 @@ import TransactionModel from '../transaction/transaction.model';
 class SellModel {
 
     constructor() { }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async sellNFT(data: any): Promise<any> {
         const { 
             Validate: { _validations }, 
@@ -58,7 +61,10 @@ class SellModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} _id
+     * @returns Promise
+     */
     public async getSellNFT(_id: any): Promise<any> {
         const { 
             Validate: { _validations }, 

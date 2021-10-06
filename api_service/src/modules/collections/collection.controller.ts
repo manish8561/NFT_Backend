@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
 import CollectionModel from "./collection.model";
 import { Helper } from '../../helpers';
@@ -23,8 +22,11 @@ class CollectionController implements Interfaces.Controller {
             .post(`${this.path}/:id`, ValidateJWT, this.collectionByIdData)
             .get(`${this.path}/isSlugExisted`, ValidateJWT, this.isSlugExisted)
     }
-
-    private async add(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async add(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { collection: { CREATE_COLLECTION } }
@@ -41,7 +43,10 @@ class CollectionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async getCollections(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
@@ -58,8 +63,11 @@ class CollectionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async collectionByIdData(req: Request, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async collectionByIdData(req: Request, res: Response) {
         const {
             Response: { sendError, sendSuccess }
         } = Helper;
@@ -73,8 +81,11 @@ class CollectionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async getItemsById(req: Request, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async getItemsById(req: Request, res: Response) {
         const {
             Response: { sendError, sendSuccess }
         } = Helper;
@@ -91,8 +102,11 @@ class CollectionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async isSlugExisted(req: Request, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async isSlugExisted(req: Request, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { collection: { CREATE_COLLECTION } }

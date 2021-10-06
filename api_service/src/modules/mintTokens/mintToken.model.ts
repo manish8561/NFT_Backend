@@ -1,10 +1,7 @@
-import mongoose from 'mongoose';
 import { Helper } from '../../helpers';
 import MintTokens from './mintToken.schema'; 
-import * as Interfaces from "../../interfaces";
 
 class MintTokenModel {
-
     constructor() { }
 
     /** 
@@ -23,7 +20,10 @@ class MintTokenModel {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async uploadFile(data: any): Promise<any> {
         try {
             const { file } = data;

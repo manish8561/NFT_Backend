@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Router } from "express";
 import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
@@ -18,8 +18,11 @@ class BuyController implements Interfaces.Controller {
             .all(`${this.path}/*`)
             .post(`${this.path}/buyItem`, ValidateJWT, this.buyItem)
     }
-
-    private async buyItem(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async buyItem(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { BUY_NFT } }

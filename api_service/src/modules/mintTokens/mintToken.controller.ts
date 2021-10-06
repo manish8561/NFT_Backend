@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 import { Helper } from "../../helpers";
 import * as Interfaces from '../../interfaces';
 import MintTokenModel from './mintToken.model';
@@ -17,8 +17,11 @@ class MintTokenController implements Interfaces.Controller {
             .post(`${this.path}/getMintedTokens`, this.getMintedTokens)
             .post(`${this.path}/uploadFile`, FileValidator, this.uploadFile)
     }
-
-    private async getMintedTokens(req: Request, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async getMintedTokens(req: Request, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
 
         try {
@@ -33,8 +36,11 @@ class MintTokenController implements Interfaces.Controller {
             return sendError(res, { status: 500, error: { error } });
         }
     }
-
-    private async uploadFile(req: Request, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async uploadFile(req: Request, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
 
         try {

@@ -80,7 +80,9 @@ class CategoryModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     */
     public async updateCategory(data: any) {
         const { 
             Validate: { _validations }, 

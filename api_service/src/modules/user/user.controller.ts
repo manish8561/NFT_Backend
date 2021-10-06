@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Request, Router } from "express";
 var nodemailer = require('nodemailer');
 import * as Interfaces from '../../interfaces';
 import UserModel from "./user.model";

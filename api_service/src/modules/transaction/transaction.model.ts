@@ -32,7 +32,10 @@ class TransactionModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async setTransactionStatus(data: any): Promise<any> {
         const { transactionHash , status } = data;
         return Transaction.updateOne({ transactionHash }, { $set: { status }});
@@ -64,7 +67,10 @@ class TransactionModel {
             return error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async getTransactionByNftId(data: any): Promise<any> {
         const { 
             Validate: { _validations }, 

@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
@@ -19,8 +19,11 @@ class SellController implements Interfaces.Controller {
             .post(`${this.path}/sellItem`, ValidateJWT, this.sell_Item)
             .get(`${this.path}/getSellNft/:id`, this.getSellNftDetails)
     }
-
-    private async sell_Item(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async sell_Item(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { SELL_NFT } }
@@ -35,8 +38,11 @@ class SellController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async getSellNftDetails(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async getSellNftDetails(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess }
         } = Helper;

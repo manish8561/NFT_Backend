@@ -1,4 +1,3 @@
-import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import Collection from './collection.schema';
 import Nft from '../nft/nft.schema';
@@ -41,7 +40,10 @@ class CollectionModel {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async getCollection(data: any): Promise<any> {
         const {
             Response: { errors },
@@ -56,7 +58,10 @@ class CollectionModel {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }
-
+    /**
+     * @param  {any} id
+     * @returns Promise
+     */
     public async getCollectionDataById(id: any): Promise<any> {
         const {
             Response: { errors },

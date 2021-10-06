@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Router } from "express";
 import * as Interfaces from '../../interfaces';
 import TransactionModel from "./transaction.model";
 import { Helper } from '../../helpers';
@@ -21,7 +21,10 @@ class TransactionController implements Interfaces.Controller {
             .post(`${this.path}/list`, ValidateJWT, this.list)
             .post(`${this.path}/getTransactionByNftId`, ValidateJWT, this.getTransactionByNftId )
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async add(req: any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
@@ -35,6 +38,10 @@ class TransactionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async list(req: any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
@@ -47,7 +54,10 @@ class TransactionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async getTransactionByNftId(req: any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {

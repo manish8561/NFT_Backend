@@ -6,7 +6,10 @@ import ABI from '../../bin/abi.json';
 class NftModel {
     contractAddress = process.env.CONTRACT_ADDRESS!;
     constructor() { }
-
+    /**
+     * @param  {any} _nft
+     * @returns Promise
+     */
     public async add(_nft:any): Promise<any> {
         const { 
             Validate: { _validations }, 
@@ -54,7 +57,10 @@ class NftModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} id
+     * @returns Promise
+     */
     public async getNFT(id: any): Promise<any> {
         const { 
             Validate: { _validations }, 

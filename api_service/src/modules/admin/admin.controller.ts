@@ -1,10 +1,7 @@
-import { NextFunction, Response, Request, Router } from "express";
-var nodemailer = require('nodemailer');
+import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
-import UserModel from "../user/user.model";
 import AdminModel from "./admin.model";
 import { Helper } from '../../helpers';
-import ValidateJWT from "../../middlewares/jwt.middleware";
 
 class AdminController implements Interfaces.Controller {
 

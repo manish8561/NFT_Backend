@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
 
 import { Helper } from '../../helpers';

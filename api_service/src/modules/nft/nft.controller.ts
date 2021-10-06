@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
 import NftModel from "./nft.model";
 import { Helper } from '../../helpers';
@@ -18,8 +18,11 @@ class NftController implements Interfaces.Controller {
             .post(`${this.path}/add`, ValidateJWT, this.add)
             .get(`${this.path}/getNft/:id`, this.getNFTDetail)
     }
-
-    private async add(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async add(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { CREATE }, common: { NO_DATA } }
@@ -37,8 +40,11 @@ class NftController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async getNFTDetail(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async getNFTDetail(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
             ResMsg: { nft: { GET_NFT_DETAIL }}
