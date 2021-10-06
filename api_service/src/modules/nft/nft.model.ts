@@ -4,7 +4,7 @@ import TransactionModel from '../transaction/transaction.model';
 import ABI from '../../bin/abi.json';
 
 class NftModel {
-    contractAddress = process.env.CONTRACT_ADDRESS!;
+    contractAddress = '0x6822C26829f423FEb51bd85f4498Cb02cA9E41E0';
     constructor() { }
     /**
      * @param  {any} _nft
@@ -76,11 +76,12 @@ class NftModel {
                 if(nft.status === 'PROCESSING') {
                     const result = await Helper.Web3Helper.getTransactionStatus(nft.transactionHash);
                     if(result && result.status) {
-                        let contract = await Helper.Web3Helper.getContractObject(this.contractAddress, ABI);
-                        console.log(contract);
-                        if(contract && contract.methods) {
-                            const tokenId = await contract.methods.uriToTokenId(nft.tokenUri).call();
-                            console.log(tokenId, 'sdfsdfsdfsfsfd')
+                       if(nft.tokenId === 0){
+                            let contract = await Helper.Web3Helper.getContractObject(this.contractAddress, ABI);
+                            if(contract && contract.methods) {
+                                const tokenId = await contract.methods.uriToTokenId(nft.tokenUri).call();
+                                nft.tokenId = Number(tokenId);
+                            }
                         }
                         nft.status = 'COMPLETED';
                         nft.save();

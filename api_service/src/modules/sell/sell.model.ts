@@ -140,6 +140,24 @@ class SellModel {
             throw error;
         }
     }
+
+    public async cancelSellNFT(_id: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { 
+                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
+            }
+        } = Helper;
+        try {
+            const isError = await _validations({ _id })
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            await Sell.deleteOne({ _id });
+            return true;
+        } catch(error: any) {
+            throw error;
+        }
+    }
 }
 
 export default new SellModel();

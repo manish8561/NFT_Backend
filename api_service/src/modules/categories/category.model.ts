@@ -95,7 +95,8 @@ class CategoryModel {
             const { id, name, status } = data;
             const isError = await _validations({ _id: id, name });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
-            return await Category.updateOne({ _id: id }, { name, status } );
+            await Category.updateOne({ _id: id }, { name, status } );
+            return true;
         } catch(error: any) {
             throw error;
         }

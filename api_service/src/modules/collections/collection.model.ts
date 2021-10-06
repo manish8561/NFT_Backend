@@ -16,7 +16,7 @@ class CollectionModel {
             ResMsg: { errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
-        try {
+        try { 
             let { page, limit, id } = data;
             const count = await Nft.countDocuments({ collectiondb: id });
             if (count === 0) {

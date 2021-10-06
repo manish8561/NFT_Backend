@@ -121,9 +121,27 @@ class UserModel {
     /**
      * @returns Promise
      */
-    public async fetchAllUsers(): Promise<any> {
+    public async fetchAllUsers(data: any): Promise<any> {
         try {
-            return await User.find({ role: {$ne: 'ADMIN'} });
+            let query:any = { role: { $ne: 'ADMIN' } };
+            let { page, limit, filters: { search, walletAddress} } = data;
+            if(search){
+                search = search.toString();
+                query.username = new RegExp(search,'i');
+                query.email = new RegExp(search,'i');
+            }
+            if(walletAddress){
+                query.walletAddress = walletAddress.toLowerCase();
+            }
+
+            if (!page) {
+                page = 1;
+            }
+            if (!limit) {
+                limit = 10;
+            }
+           
+            return await User.find(query).skip(page-1).limit(page * limit).sort({ createdAt: -1 });
         } catch(error: any) {
             throw error;
         }
