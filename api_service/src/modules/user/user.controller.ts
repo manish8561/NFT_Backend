@@ -4,6 +4,7 @@ import * as Interfaces from '../../interfaces';
 import UserModel from "./user.model";
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
+import ValidateAdminJWT from "../../middlewares/admin.middleware";
 
 class UserController implements Interfaces.Controller {
 
@@ -21,7 +22,7 @@ class UserController implements Interfaces.Controller {
             .post(`${this.path}/updateProfile`, ValidateJWT, this.updateUser)
             .post(`${this.path}/verification`, ValidateJWT, this.sendVerificationEmail)
             .post(`${this.path}/updateVerificationStatus`, ValidateJWT, this.updateVerificationStatus)
-            .get(`${this.path}/getUsers`, this.fetchUsers)
+            .post(`${this.path}/getUsers`, ValidateAdminJWT, this.fetchUsers)
     }
     /**
      * @param  {Request} req
@@ -56,8 +57,11 @@ class UserController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async updateUser(req: Request | any, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request|any} req
+     * @param  {Response} res
+     */
+    private async updateUser(req: Request | any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },
             ResMsg: { common: { NO_DATA } }
@@ -76,8 +80,11 @@ class UserController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async sendVerificationEmail(req: Request, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async sendVerificationEmail(req: Request, res: Response) {
         const verificationCode = Math.floor(100000 + Math.random() * 900000);
 
         var transporter = nodemailer.createTransport({
@@ -104,8 +111,11 @@ class UserController implements Interfaces.Controller {
             }
         });    
     }
-
-    private async updateVerificationStatus(req: Request | any, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request|any} req
+     * @param  {Response} res
+     */
+    private async updateVerificationStatus(req: Request | any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },
             ResMsg: { common: { NO_DATA } }
@@ -122,8 +132,11 @@ class UserController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
-
-    private async fetchUsers(req: Request | any, res: Response, next: NextFunction) {
+    /**
+     * @param  {Request|any} req
+     * @param  {Response} res
+     */
+    private async fetchUsers(req: Request | any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },
          } = Helper;

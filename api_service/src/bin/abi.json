@@ -280,6 +280,19 @@
       "inputs": [
         {
           "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelOrder",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
           "name": "tokenId",
           "type": "uint256"
         },
@@ -305,9 +318,9 @@
       "name": "creatorOf",
       "outputs": [
         {
-          "internalType": "uint32",
+          "internalType": "uint96",
           "name": "royality",
-          "type": "uint32"
+          "type": "uint96"
         },
         {
           "internalType": "address",
@@ -441,9 +454,9 @@
       "name": "orderBook",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "tokenId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
           "internalType": "uint8",
@@ -451,14 +464,14 @@
           "type": "uint8"
         },
         {
-          "internalType": "uint248",
+          "internalType": "uint128",
           "name": "price",
-          "type": "uint248"
+          "type": "uint128"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint48",
           "name": "timestamp",
-          "type": "uint256"
+          "type": "uint48"
         },
         {
           "internalType": "bool",
@@ -562,14 +575,14 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "tokenId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
-          "internalType": "uint248",
+          "internalType": "uint128",
           "name": "price",
-          "type": "uint248"
+          "type": "uint128"
         },
         {
           "internalType": "uint8",

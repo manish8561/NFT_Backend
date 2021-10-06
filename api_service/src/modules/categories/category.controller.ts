@@ -20,6 +20,8 @@ class CategoryController implements Interfaces.Controller {
             .get(`${this.path}/delete/:id`, ValidateAdminJWT, this.adminDeleteCategory)
             .put(`${this.path}/update`, ValidateAdminJWT, this.adminUpdateCategory)
             .get(`${this.path}/get`, ValidateAdminJWT, this.getAdminCategory)
+            .get(`${this.path}/userCategories`, this.getUserCategories)
+
     }
     /**
      * @param  {Request} req
@@ -42,6 +44,9 @@ class CategoryController implements Interfaces.Controller {
     private async adminAddCategory(req: Request | any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
+            if (Object.keys(req.body).length < 1) {
+                return sendError(res, { status: 400, error: { message: 'No data posted' } });
+            }
             let result: any = await CategoryModel.addCatgories(req.body);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', result });
@@ -71,7 +76,7 @@ class CategoryController implements Interfaces.Controller {
     private async adminUpdateCategory(req: Request | any, res: Response) {
         const { Response: { sendError, sendSuccess } } = Helper;
         try {
-            if (Object.keys(req.body).length < 2) {
+            if (Object.keys(req.body).length < 1) {
                 return sendError(res, { status: 400, error: { message: 'Parameter is missing' } });
             }
             let result: any = await CategoryModel.updateCategory(req.body);
@@ -81,6 +86,20 @@ class CategoryController implements Interfaces.Controller {
             return sendError(res, { status: 400, error });
         }
     }
+    /**
+     * @param  {Request|any} req
+     * @param  {Response} res
+     */
+    private async getUserCategories(req: Request | any, res: Response) {
+        const { Response: { sendError, sendSuccess } } = Helper;
+        try {
+            let result: any = await CategoryModel.getUserCategories();
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { message: 'SUCCESS', result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }        
 }
 
 export default CategoryController;

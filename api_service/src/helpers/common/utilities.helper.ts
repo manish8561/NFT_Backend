@@ -71,6 +71,14 @@ class Utilities {
         }
     }
 
+    public async capitalize_Words(str: any): Promise<any> {
+        try {
+            return str.replace(/\w\S*/g, (txt: any) => {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        } catch (error) {
+            return error;
+        }
+    }
+
     /**
      * @function compareHash
      * @param passwordtext 

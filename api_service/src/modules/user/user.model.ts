@@ -40,7 +40,10 @@ class UserModel {
             return errors('SOMETHING_WENT_WRONG', error);
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async updateUserProfile(data: any): Promise<any> {
         const {
             Validate: { _validations },
@@ -66,7 +69,10 @@ class UserModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async updateUserVerifyStatus(data: any): Promise <any> {
         const {
             Validate: { _validations },
@@ -113,7 +119,9 @@ class UserModel {
             return error;
         }
     }
-
+    /**
+     * @returns Promise
+     */
     public async fetchAllUsers(): Promise<any> {
         try {
             return await User.find({ role: {$ne: 'ADMIN'} });
