@@ -21,6 +21,7 @@ class UserController implements Interfaces.Controller {
             .post(`${this.path}/updateProfile`, ValidateJWT, this.updateUser)
             .post(`${this.path}/verification`, ValidateJWT, this.sendVerificationEmail)
             .post(`${this.path}/updateVerificationStatus`, ValidateJWT, this.updateVerificationStatus)
+            .get(`${this.path}/getUsers`, this.fetchUsers)
     }
     /**
      * @param  {Request} req
@@ -115,6 +116,19 @@ class UserController implements Interfaces.Controller {
             }
             let data:any = req.user;
             let result = await UserModel.updateUserVerifyStatus(data);
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { message: 'SUCCESS', data: result });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }
+
+    private async fetchUsers(req: Request | any, res: Response, next: NextFunction) {
+        const { 
+            Response: { sendError, sendSuccess },
+         } = Helper;
+        try {
+            let result = await UserModel.fetchAllUsers();
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch(error: any) {

@@ -72,6 +72,10 @@ class NftModel {
                     if(result && result.status) {
                         let contract = await Helper.Web3Helper.getContractObject(this.contractAddress, ABI);
                         console.log(contract);
+                        if(contract && contract.methods) {
+                            const tokenId = await contract.methods.uriToTokenId(nft.tokenUri).call();
+                            console.log(tokenId, 'sdfsdfsdfsfsfd')
+                        }
                         nft.status = 'COMPLETED';
                         nft.save();
                         TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'COMPLETED'});

@@ -106,11 +106,19 @@ class UserModel {
      * @param  {string} _id
      * @returns Promise
      */
-    public async details(_id:string):Promise<any>{
+    public async details(_id:string):Promise<any> {
         try {
             return await User.findOne({_id});
         } catch (error) {
             return error;
+        }
+    }
+
+    public async fetchAllUsers(): Promise<any> {
+        try {
+            return await User.find({ role: {$ne: 'ADMIN'} });
+        } catch(error: any) {
+            throw error;
         }
     }
 }
