@@ -25,13 +25,11 @@ class NftController implements Interfaces.Controller {
             ResMsg: { nft: { CREATE }, common: { NO_DATA } }
         } = Helper;
         try {     
+            if (!Object.keys(req.body).length) {
+                return sendError(res, { status: 400, error: { message: NO_DATA } });
+            }
             let _data = req.body;
             _data.user = req.user!;
-           console.log('**********',req.body)
-            if (!req.body) {
-                return sendError(res, { status: 400, error: {message: NO_DATA} });
-            }
-
             const result = await NftModel.add(_data);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: CREATE });

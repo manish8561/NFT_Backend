@@ -6,6 +6,11 @@ export const ResMsg = {
         SUCCESS: "Logged in successfully",
         BLOCKED: "Your account has been blocked.!!'"
     },
+    user: {
+        UPDATE_USER: "Update user successfully",
+        VERIFY_EMAIL: "Verfication link sent to your email.. Verify now.",
+        UPDATE_USER_VERIFICATION_STATUS: "Update verification status successfully."
+    },
     collection: {
         CREATE_COLLECTION: "Collection has been created successfully..!!",
         COLLECTION_IS_ALREADY_CREATED: "Collection is already exists in records..!!",

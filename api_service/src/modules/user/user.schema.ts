@@ -20,6 +20,7 @@ class UserSchema extends Schema {
             socialLinks: { type: Array },
             role: { type: String, default: 'USER' },
             status: { type: String, default: 'ACTIVE' },
+            verificationStatus: { type: Boolean, default: false }
         }, { timestamps: true });
         
         this.schema.index({ walletAddress: 1, username: 1 });

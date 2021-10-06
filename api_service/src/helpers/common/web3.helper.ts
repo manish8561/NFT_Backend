@@ -39,18 +39,6 @@ class Web3Helper {
         this.contractObject = new web3Object.eth.Contract(contractABI, contractAddress);
         return this.contractObject;
     }
-    /**
-     * get token Contract
-     * @param  {string} tokenAddress
-     * @returns Promise
-     */
-    // public async getTrokenContractObject(tokenAddress: string): Promise<any> {
-    //     if (this.contractObject && this.tokenAddress && this.tokenAddress.toLowerCase() === tokenAddress.toLowerCase()) {
-    //         return this.contractObject;
-    //     }
-
-    //     this.contractObject = new this.web3Object.eth.Contract(MAIN_CONTRACT_LIST.token.abi, tokenAddress);
-    // }
 
     public async getTransactionStatus(txHash: string): Promise<any> {
      try {

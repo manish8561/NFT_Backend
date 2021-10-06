@@ -48,7 +48,7 @@ class BuyModel {
             return saveData;
 
         } catch(error: any) {
-
+            throw error;
         }
     }
 
