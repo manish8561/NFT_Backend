@@ -61,7 +61,8 @@ class AdminModel {
             const { status, id } = data;
             const isError = await _validations({ _id: id, status });
             if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
-            return await User.updateOne({_id: id }, { status }, { upsert: false });
+            await User.updateOne({_id: id }, { status }, { upsert: false });
+            return true;
         } catch(error: any) {
             throw error;
         }
