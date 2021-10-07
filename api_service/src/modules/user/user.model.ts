@@ -142,8 +142,12 @@ class UserModel {
             if (!limit) {
                 limit = 10;
             }
-           
-            return await User.find(query).skip(page-1).limit(page * limit).sort({ createdAt: -1 });
+           let count: any = await User.countDocuments(query);
+            let users: any =  await User.find(query).skip(page-1).limit(page * limit).sort({ createdAt: -1 });
+            return {
+                count,
+                users
+            }
         } catch(error: any) {
             throw error;
         }
