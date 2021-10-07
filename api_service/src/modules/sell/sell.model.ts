@@ -140,8 +140,11 @@ class SellModel {
             throw error;
         }
     }
-
-    public async cancelSellNFT(_id: any): Promise<any> {
+    /**
+     * @param  {any} _id
+     * @returns Promise
+     */
+    public async cancelNFT(_id: any): Promise<any> {
         const { 
             Validate: { _validations }, 
             Response: { errors },

@@ -32,7 +32,7 @@ class CategoryController implements Interfaces.Controller {
         try {
             let result: any = await CategoryModel.getCategories();
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
-            return sendSuccess(res, { message: 'SUCCESS', result });
+            return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
             return sendError(res, { status: 400, error });
         }

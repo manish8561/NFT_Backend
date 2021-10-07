@@ -119,19 +119,21 @@ class UserModel {
         }
     }
     /**
+     * @param  {any} data
      * @returns Promise
      */
     public async fetchAllUsers(data: any): Promise<any> {
         try {
             let query:any = { role: { $ne: 'ADMIN' } };
-            let { page, limit, filters: { search, walletAddress} } = data;
-            if(search){
+            let { page, limit, filters } = data;
+            if(filters && filters.search){
+                let { search } = filters;
                 search = search.toString();
                 query.username = new RegExp(search,'i');
                 query.email = new RegExp(search,'i');
             }
-            if(walletAddress){
-                query.walletAddress = walletAddress.toLowerCase();
+            if(filters && filters.walletAddress){
+                query.walletAddress = filters.walletAddress.toLowerCase();
             }
 
             if (!page) {

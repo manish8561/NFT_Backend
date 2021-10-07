@@ -19,7 +19,7 @@ class TransactionController implements Interfaces.Controller {
             .all(`${this.path}/*`)
             .post(`${this.path}/add`, ValidateJWT, this.add)
             .post(`${this.path}/list`, ValidateJWT, this.list)
-            .post(`${this.path}/getTransactionByNftId`, ValidateJWT, this.getTransactionByNftId )
+            .post(`${this.path}/getTransactionByNftId`, this.getTransactionByNftId )
     }
     /**
      * @param  {any} req
