@@ -40,7 +40,7 @@ class BuyModel {
                 networkId: buyNft.networkId,
                 transactionType: 'BUY',
                 status: 'COMPLETED',
-                token: 'eth',
+                token: 'ETH',
                 amount: buyNft.price,
                 transactionHash: buyNft.transactionHash
             }

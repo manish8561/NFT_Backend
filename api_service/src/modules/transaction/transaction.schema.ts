@@ -20,7 +20,7 @@ class TransactionSchema extends Schema {
             networkId: { type: String, required: true },
             transactionHash: {type: String, default:""},
             transactionType: { type: String, trim: true },
-            token: { type: String, default:'eth'},
+            token: { type: String, default:'ETH'},
             amount : {type: String, default:'0'}, //due to decimals places
             status: { type: String, enum: [ "PENDING", "ERROR", "FAILED","COMPLETED", "PROCESSING" ], 
             default: 'PENDING' },

@@ -46,7 +46,7 @@ class NftModel {
                 networkId: nft.networkId,
                 transactionType: 'MINT',
                 status: "PROCESSING",
-                token: 'eth',
+                token: 'ETH',
                 amount: 0,
                 transactionHash: transactionHash
             }

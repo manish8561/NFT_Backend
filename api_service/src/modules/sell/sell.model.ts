@@ -51,7 +51,7 @@ class SellModel {
                 networkId: sellNft.networkId,
                 transactionType: 'SELL',
                 status: 'PROCESSING',
-                token: 'eth',
+                token: 'ETH',
                 amount: sellNft.price,
                 transactionHash
             }
