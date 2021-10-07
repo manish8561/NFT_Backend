@@ -124,7 +124,7 @@ class UserModel {
      */
     public async fetchAllUsers(data: any): Promise<any> {
         try {
-            let query:any = { role: { $ne: 'ADMIN' } };
+            let query: any = { role: { $ne: 'ADMIN' } };
             let { page, limit, filters } = data;
             if(filters && filters.search){
                 let { search } = filters;
@@ -135,15 +135,10 @@ class UserModel {
             if(filters && filters.walletAddress){
                 query.walletAddress = filters.walletAddress.toLowerCase();
             }
-
-            if (!page) {
-                page = 1;
-            }
-            if (!limit) {
-                limit = 10;
-            }
-           let count: any = await User.countDocuments(query);
-            let users: any =  await User.find(query).skip(page-1).limit(page * limit).sort({ createdAt: -1 });
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            let count: any = await User.countDocuments(query);
+            let users: any =  await User.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
             return {
                 count,
                 users

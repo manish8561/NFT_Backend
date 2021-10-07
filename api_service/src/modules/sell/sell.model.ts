@@ -161,6 +161,32 @@ class SellModel {
             throw error;
         }
     }
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async updateSellNft(data: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { 
+                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
+            }
+        } = Helper;
+        try {
+            const { id, token, price } = data;
+            const isError = await _validations({ _id: id })
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            const obj = {
+                token,
+                price
+            }
+            await Sell.updateOne({ _id: id }, { $set : obj }, { upsert: false });
+            return true;
+        } catch(error: any) {
+            throw error;
+        }
+    }
 }
 
 export default new SellModel();

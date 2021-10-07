@@ -141,12 +141,10 @@ class UserController implements Interfaces.Controller {
             Response: { sendError, sendSuccess },
          } = Helper;
         try {
-            console
             let result = await UserModel.fetchAllUsers(req.body);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch(error: any) {
-            console.log('hihihihe', error)
             return sendError(res, { status: 400, error });
         }
     }

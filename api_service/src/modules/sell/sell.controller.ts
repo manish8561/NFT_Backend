@@ -19,6 +19,7 @@ class SellController implements Interfaces.Controller {
             .post(`${this.path}/sellItem`, ValidateJWT, this.sell_Item)
             .get(`${this.path}/getSellNft/:id`, this.getSellNftDetails)
             .get(`${this.path}/cancelNft/:id`, ValidateJWT, this.cancelSellNFT)
+            .post(`${this.path}/update`, ValidateJWT, this.updateSellNFT)
     }
     /**
      * @param  {any} req
@@ -68,6 +69,25 @@ class SellController implements Interfaces.Controller {
         try {
             const id: any = req.params.id;
             const result: any = await SellModel.cancelNFT(id);
+            if (result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async updateSellNFT(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess }
+        } = Helper;
+        try {
+            if(Object.keys(req.body).length === 0) {
+                return sendError(res, { status: 400, error: {message : 'No data posted'} })
+            }
+            const result: any = await SellModel.updateSellNft(req.body);
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {

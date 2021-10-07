@@ -51,6 +51,21 @@ class AdminModel {
             return error;
         }
     }
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async adminUpdateUser(data: any): Promise<any> {
+        const { Validate: { _validations }, Response: { errors } } = Helper;
+        try {
+            const { status, id } = data;
+            const isError = await _validations({ _id: id, status });
+            if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
+            return await User.updateOne({_id: id }, { status }, { upsert: false });
+        } catch(error: any) {
+            throw error;
+        }
+    }
 }
 
 export default new AdminModel();

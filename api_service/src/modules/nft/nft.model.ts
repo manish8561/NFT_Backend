@@ -124,6 +124,34 @@ class NftModel {
             throw error;
         }
     }
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async searchNft(data: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { 
+                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
+            }
+        } = Helper;
+        try {
+            let query: any = { status: { $eq: 'COMPLETED' } };
+            let { page, limit, filters } = data;
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            if(filters && filters.search) {
+                let { search } = filters;
+                search = search.toString();
+                query.name = new RegExp(search,'i');
+
+            }
+            return await Nft.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+        } catch(error: any) {
+            throw error;
+        }
+    }
 }
 
 export default new NftModel();

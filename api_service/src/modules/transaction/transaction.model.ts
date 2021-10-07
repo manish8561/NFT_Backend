@@ -87,7 +87,7 @@ class TransactionModel {
             if(!limit){
                 limit = 10;
             }
-            return await Transaction.find({ nft: id, status: 'COMPLETED'}).skip(page-1).limit((page) * limit).sort({ createdAt: -1 });
+            return await Transaction.find({ nft: id, status: 'COMPLETED'}).skip(page-1 * limit).limit(limit).sort({ createdAt: -1 });
         } catch(error) {
 
         }
