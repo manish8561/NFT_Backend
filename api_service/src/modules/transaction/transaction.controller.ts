@@ -3,6 +3,7 @@ import * as Interfaces from '../../interfaces';
 import TransactionModel from "./transaction.model";
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
+import ValidateAdminJWT from "../../middlewares/admin.middleware";
 
 
 class TransactionController implements Interfaces.Controller {
@@ -20,6 +21,7 @@ class TransactionController implements Interfaces.Controller {
             .post(`${this.path}/add`, ValidateJWT, this.add)
             .post(`${this.path}/list`, ValidateJWT, this.list)
             .post(`${this.path}/getTransactionByNftId`, this.getTransactionByNftId )
+            .post(`${this.path}/getTransactionList`, ValidateAdminJWT,this.getTransactionList )
     }
     /**
      * @param  {any} req
@@ -67,6 +69,24 @@ class TransactionController implements Interfaces.Controller {
                 return sendError(res, { status: 400, error })
             }
             const result = await TransactionModel.getTransactionByNftId(req.body);
+            if(result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { data: result });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async getTransactionList(req: any, res: Response) {
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
+        try {
+            const error = { message:'Enter complete parameters' };
+            if(Object.keys(req.body).length <= 0) {
+                return sendError(res, { status: 400, error })
+            }
+            const result = await TransactionModel.fetchTransactionData(req.body);
             if(result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { data: result });
         } catch(error: any) {

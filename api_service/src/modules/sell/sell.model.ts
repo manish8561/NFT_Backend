@@ -39,7 +39,7 @@ class SellModel {
             sellNft.futureDate = futureDate;
             sellNft.allowedBuyerAddress = allowedBuyerAddress;
             sellNft.networkId = networkId;
-            // sellNft.status = "PROCESSING";
+            sellNft.status = "ACTIVE";
             sellNft.transactionStatus = 'PROCESSING';
             sellNft.transactionHash = transactionHash;
             
@@ -174,12 +174,13 @@ class SellModel {
             }
         } = Helper;
         try {
-            const { id, token, price } = data;
+            const { id, token, price, status } = data;
             const isError = await _validations({ _id: id })
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             const obj = {
                 token,
-                price
+                price,
+                status
             }
             await Sell.updateOne({ _id: id }, { $set : obj }, { upsert: false });
             return true;

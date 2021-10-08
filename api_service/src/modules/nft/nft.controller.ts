@@ -17,6 +17,7 @@ class NftController implements Interfaces.Controller {
             .all(`${this.path}/*`)
             .post(`${this.path}/add`, ValidateJWT, this.add)
             .get(`${this.path}/getNft/:id`, this.getNFTDetail)
+            .post(`${this.path}/search`, this.searchNFT)
     }
     /**
      * @param  {any} req
@@ -57,6 +58,20 @@ class NftController implements Interfaces.Controller {
             const result: any = await NftModel.getNFT(id);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { data: result, message: GET_NFT_DETAIL });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+
+    private async searchNFT(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const result: any = await NftModel.searchNft(req.body);
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { data: result, message: 'Fetch successfully' });
         } catch(error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }

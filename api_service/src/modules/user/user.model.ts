@@ -129,16 +129,17 @@ class UserModel {
             if(filters && filters.search){
                 let { search } = filters;
                 search = search.toString();
-                query.username = new RegExp(search,'i');
-                query.email = new RegExp(search,'i');
-            }
+                query = {$or:[{username:new RegExp(search,'i')},{email:new RegExp(search,'i')} ]};
+                query.role= { $ne: 'ADMIN' };
+            }   
             if(filters && filters.walletAddress){
                 query.walletAddress = filters.walletAddress.toLowerCase();
+                query.role= { $ne: 'ADMIN' };
             }
             page = Number(page) || 1;
             limit = Number(limit) || 10;
             let count: any = await User.countDocuments(query);
-            let users: any =  await User.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            let users: any = await User.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
             return {
                 count,
                 users

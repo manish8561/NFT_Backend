@@ -129,13 +129,6 @@ class NftModel {
      * @returns Promise
      */
     public async searchNft(data: any): Promise<any> {
-        const { 
-            Validate: { _validations }, 
-            Response: { errors },
-            ResMsg: { 
-                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
-            }
-        } = Helper;
         try {
             let query: any = { status: { $eq: 'COMPLETED' } };
             let { page, limit, filters } = data;
@@ -144,10 +137,21 @@ class NftModel {
             if(filters && filters.search) {
                 let { search } = filters;
                 search = search.toString();
-                query.name = new RegExp(search,'i');
-
+                query = { $or : [
+                    { name: new RegExp(search, 'i') },
+                    { transactionHash: new RegExp(search, 'i') },
+                    { tokenId: new RegExp(search, 'i') },
+                    { networkId: new RegExp(search, 'i') },
+                    { description: new RegExp(search, 'i') }
+                ]};
+                query.status = { $eq: 'COMPLETED' };
             }
-            return await Nft.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            const count = await Nft.countDocuments(query);
+            const result = await Nft.find(query).skip((page-1) * limit).populate('creator', 'username email' ).populate('collectiondb', 'name').limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                result
+            };
         } catch(error: any) {
             throw error;
         }

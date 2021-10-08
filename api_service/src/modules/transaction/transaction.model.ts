@@ -75,7 +75,7 @@ class TransactionModel {
         const { 
             Validate: { _validations }, 
             Response: { errors },
-            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG } }
+            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED } }
         } = Helper;
         try {
             let { page, limit, id } = data;
@@ -87,12 +87,49 @@ class TransactionModel {
             if(!limit){
                 limit = 10;
             }
-            return await Transaction.find({ nft: id, status: 'COMPLETED'}).skip(page-1 * limit).limit(limit).sort({ createdAt: -1 });
+            const count = await Transaction.countDocuments({ nft: id, status: 'COMPLETED'});
+            const res = await Transaction.find({ nft: id, status: 'COMPLETED'}).populate('user').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                res
+            };
         } catch(error) {
-
+            throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async fetchTransactionData(data: any): Promise<any> {
+        try {
+            let query: any = {}
+            let { page, limit, filters, startDate, endDate } = data;
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            if(filters && filters.search){
+                let { search } = filters;
+                search = search.toString();
+                query = {$or:[
+                    { transactionHash: new RegExp(search,'i') },
+                    { transactionType: new RegExp(search,'i') },
+                    { token: new RegExp(search,'i') },
+                    { nftAddress: new RegExp(search,'i') }
+                 ]}
+            }
+            if(startDate && endDate) {
+                query.createdAt = { $gte : startDate, $lt: endDate };
+            }
+            const count = await Transaction.countDocuments(query);
+            const result =  await Transaction.find(query).populate('user').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                result
+            }
+        } catch(error: any) {
+            throw error;
+        }
+    }
 }
 
 export default new TransactionModel();
