@@ -28,7 +28,7 @@ class SellController implements Interfaces.Controller {
     private async sell_Item(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { nft: { SELL_NFT } }
+            ResMsg: { nft: { SELL_NFT }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
         try {
             const data:any = req.body;
@@ -37,7 +37,7 @@ class SellController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: SELL_NFT });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -46,7 +46,8 @@ class SellController implements Interfaces.Controller {
      */
     private async getSellNftDetails(req: any, res: Response) {
         const {
-            Response: { sendError, sendSuccess }
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
         } = Helper;
         try {
             const _id: any = req.params.id;
@@ -55,7 +56,7 @@ class SellController implements Interfaces.Controller {
             return sendSuccess(res, { data: result });
         } catch(error: any) {
             console.log(error);
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -64,7 +65,8 @@ class SellController implements Interfaces.Controller {
      */
     private async cancelSellNFT(req: any, res: Response) {
         const {
-            Response: { sendError, sendSuccess }
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
         } = Helper;
         try {
             const id: any = req.params.id;
@@ -72,7 +74,7 @@ class SellController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -81,7 +83,8 @@ class SellController implements Interfaces.Controller {
      */
     private async updateSellNFT(req: any, res: Response) {
         const {
-            Response: { sendError, sendSuccess }
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
         } = Helper;
         try {
             if(Object.keys(req.body).length === 0) {
@@ -91,7 +94,7 @@ class SellController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 }

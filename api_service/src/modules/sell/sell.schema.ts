@@ -11,7 +11,7 @@ class SellSchema extends Schema {
 
     private createSchema() {
         this.schema = new Schema({
-            nft: { type: Schema.Types.ObjectId, ref: "Nft" },
+            nft: { type: Schema.Types.ObjectId, ref: "Nft", required: true },
             nftAddress: { type: String, required: true, trim: true },
             token: { type: String, default: "eth" },
             sellType: { type: String, enum: ["SET_PRICE", "HIGHEST_BID", "BUNDLE"], default: "SET_PRICE", required: true },

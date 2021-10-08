@@ -29,7 +29,7 @@ class UserController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async loginUserOrMaybeRegister(req: Request, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
 
         try {
             let result = await UserModel.loginUserOrMaybeRegister(req.body);
@@ -38,7 +38,7 @@ class UserController implements Interfaces.Controller {
             result = { user: result };
             return sendSuccess(res, { message: 'SUCCESS', token });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -46,15 +46,14 @@ class UserController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async details(req: any, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
-
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
             const { _id } = req.user!;
             let result = await UserModel.details(_id);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -64,7 +63,7 @@ class UserController implements Interfaces.Controller {
     private async updateUser(req: Request | any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },
-            ResMsg: { common: { NO_DATA } }
+            ResMsg: { common: { NO_DATA }, errors: { SOMETHING_WENT_WRONG } }
          } = Helper;
         
         try {
@@ -77,7 +76,7 @@ class UserController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch(error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -118,7 +117,7 @@ class UserController implements Interfaces.Controller {
     private async updateVerificationStatus(req: Request | any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },
-            ResMsg: { common: { NO_DATA } }
+            ResMsg: { common: { NO_DATA }, errors: { SOMETHING_WENT_WRONG } }
          } = Helper;
         try {
             if (!req.user) {
@@ -129,7 +128,7 @@ class UserController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch(error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -139,13 +138,14 @@ class UserController implements Interfaces.Controller {
     private async fetchUsers(req: Request | any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
          } = Helper;
         try {
             let result = await UserModel.fetchAllUsers(req.body);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch(error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 }

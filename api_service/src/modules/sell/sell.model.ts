@@ -42,7 +42,7 @@ class SellModel {
             // sellNft.status = "PROCESSING";
             sellNft.transactionStatus = 'PROCESSING';
             sellNft.transactionHash = transactionHash;
-
+            
             const saveData = await sellNft.save();
             const obj: any = {
                 user,
@@ -74,7 +74,7 @@ class SellModel {
             }
         } = Helper;
         try {
-            const isError = await _validations({ _id})
+            const isError = await _validations({ _id })
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             const nft:any = await Sell.findOne({ nft:_id, status:'ACTIVE' });
             if(nft){

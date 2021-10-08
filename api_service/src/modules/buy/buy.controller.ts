@@ -25,7 +25,7 @@ class BuyController implements Interfaces.Controller {
     private async buyItem(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { nft: { BUY_NFT } }
+            ResMsg: { nft: { BUY_NFT }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
         try {
             const data:any = req.body;
@@ -34,7 +34,7 @@ class BuyController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: BUY_NFT });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 }

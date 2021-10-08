@@ -25,7 +25,7 @@ class NftController implements Interfaces.Controller {
     private async add(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { nft: { CREATE }, common: { NO_DATA } }
+            ResMsg: { nft: { CREATE }, common: { NO_DATA }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
         try {     
             if (!Object.keys(req.body).length) {
@@ -37,7 +37,7 @@ class NftController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: CREATE });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -47,7 +47,7 @@ class NftController implements Interfaces.Controller {
     private async getNFTDetail(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { nft: { GET_NFT_DETAIL }}
+            ResMsg: { nft: { GET_NFT_DETAIL }, errors: { SOMETHING_WENT_WRONG }}
         } = Helper;
         try {
             const id: any = req.params.id
@@ -58,7 +58,7 @@ class NftController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { data: result, message: GET_NFT_DETAIL });
         } catch(error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 }

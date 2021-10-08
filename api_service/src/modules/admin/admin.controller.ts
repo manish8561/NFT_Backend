@@ -22,7 +22,7 @@ class AdminController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async adminLogin(req: Request | any, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
            if(Object.keys(req.body).length === 0) {
             return sendError(res, { status: 400, error: {message : 'No data posted'} })
@@ -32,7 +32,7 @@ class AdminController implements Interfaces.Controller {
             const token: string = await AdminModel.generateJwtToken(result);
             return sendSuccess(res, { message: 'SUCCESS', token });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -40,7 +40,9 @@ class AdminController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async adminUpdateUser(req: Request | any, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { 
+            errors: { SOMETHING_WENT_WRONG }
+        } } = Helper;
         try {
            if(Object.keys(req.body).length === 0) {
                 return sendError(res, { status: 400, error: {message : 'No data posted'} })
@@ -49,7 +51,7 @@ class AdminController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', result });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 

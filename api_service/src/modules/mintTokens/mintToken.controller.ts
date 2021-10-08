@@ -22,7 +22,7 @@ class MintTokenController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async getMintedTokens(req: Request, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
 
         try {
             const data = req.body;
@@ -32,8 +32,8 @@ class MintTokenController implements Interfaces.Controller {
 
             /** return seccess - registered user */
             return sendSuccess(res, { message: "Fetched Minted Data", data: { logs: result } });
-        } catch (error) {
-            return sendError(res, { status: 500, error: { error } });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -41,7 +41,7 @@ class MintTokenController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async uploadFile(req: Request, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
 
         try {
             const data: any = { file: req.file, host: req.hostname };
@@ -51,8 +51,8 @@ class MintTokenController implements Interfaces.Controller {
 
             /** return seccess - registered user */
             return sendSuccess(res, { message: "Fetched Minted Data", data: { file: result } });
-        } catch (error) {
-            return sendError(res, { status: 500, error: { error } });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 

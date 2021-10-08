@@ -29,7 +29,7 @@ class CollectionController implements Interfaces.Controller {
     private async add(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { collection: { CREATE_COLLECTION } }
+            ResMsg: { collection: { CREATE_COLLECTION }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
         try {
@@ -40,7 +40,7 @@ class CollectionController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: CREATE_COLLECTION });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -50,7 +50,7 @@ class CollectionController implements Interfaces.Controller {
     private async getCollections(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { collection: { CREATE_COLLECTION } }
+            ResMsg: { collection: { CREATE_COLLECTION }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
         try {
@@ -58,9 +58,9 @@ class CollectionController implements Interfaces.Controller {
             data.user= req.user!;
             const result = await CollectionModel.getCollection(data);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
-            return sendSuccess(res, { data: result });
+            return sendSuccess(res, { data: result, message: CREATE_COLLECTION });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -69,7 +69,8 @@ class CollectionController implements Interfaces.Controller {
      */
     private async collectionByIdData(req: Request, res: Response) {
         const {
-            Response: { sendError, sendSuccess }
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
         } = Helper;
 
         try {
@@ -78,7 +79,7 @@ class CollectionController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { data: result });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -87,7 +88,8 @@ class CollectionController implements Interfaces.Controller {
      */
     private async getItemsById(req: Request, res: Response) {
         const {
-            Response: { sendError, sendSuccess }
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
         } = Helper;
         try {
             const error = { message:'Enter complete parameters' };
@@ -99,7 +101,7 @@ class CollectionController implements Interfaces.Controller {
             if(result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { data: result });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -109,7 +111,7 @@ class CollectionController implements Interfaces.Controller {
     private async isSlugExisted(req: Request, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { collection: { CREATE_COLLECTION } }
+            ResMsg: { collection: { CREATE_COLLECTION }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
         try {
@@ -118,7 +120,7 @@ class CollectionController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: CREATE_COLLECTION });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 
