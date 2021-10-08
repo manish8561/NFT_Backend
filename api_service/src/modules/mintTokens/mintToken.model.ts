@@ -33,7 +33,7 @@ class MintTokenModel {
                 }
             }
             // return `${process.env.API_URL}${file['path']}`;
-            return `http://10.1.1.143:3001${file['path']}`;
+            return `https://nft-poc.staging-host.com${file['path']}`;
 
         } catch (error) {
             const { Response: { errors }, ResMsg: { errors: { SOMETHING_WENT_WRONG } } } = Helper;
