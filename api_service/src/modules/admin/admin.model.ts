@@ -20,14 +20,14 @@ class AdminModel {
             if(user){
                 return user;
             } else {
-                return {
+                 return {
                     status: 400,
-                    message: 'Data not found'
+                    errors: 'Wrong credentials'
                 }
             }
         } catch (error) {
             console.log(error, 'model')
-            return errors('SOMETHING_WENT_WRONG', error);
+            throw error;
         }
     }
     

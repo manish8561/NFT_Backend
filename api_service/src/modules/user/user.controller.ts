@@ -33,9 +33,8 @@ class UserController implements Interfaces.Controller {
 
         try {
             let result = await UserModel.loginUserOrMaybeRegister(req.body);
-            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            if (result.error) return sendError(res, { status: 400, error: result.error });
             const token: string = await UserModel.generateJwtToken(result);
-            result = { user: result };
             return sendSuccess(res, { message: 'SUCCESS', token });
         } catch (error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });

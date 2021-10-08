@@ -15,11 +15,13 @@ class UserModel {
             const { walletAddress, wallet, networkId } = _user;
             const isError = await _validations({ walletAddress, wallet, networkId });
             if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
+            console.log('ENTERRRR');
             let isRegistered = await this._isUserAddressExists(walletAddress);
+            console.log('isRegistered',isRegistered);
             if (isRegistered) return isRegistered;
             return await this._createNewUser(_user);
         } catch (error) {
-            return errors('SOMETHING_WENT_WRONG', error);
+            throw error;
         }
     }
     /**
@@ -96,7 +98,9 @@ class UserModel {
      * @returns Promise
      */
     private async _isUserAddressExists(walletAddress: string): Promise<any>  {
-        return await User.findOne({ walletAddress });
+        const result = await User.findOne({ walletAddress });
+        console.log('result',result);
+        return result;
     }
     /**
      * @param  {any} user

@@ -24,11 +24,16 @@ class AdminController implements Interfaces.Controller {
     private async adminLogin(req: Request | any, res: Response) {
         const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
-           if(Object.keys(req.body).length === 0) {
-            return sendError(res, { status: 400, error: {message : 'No data posted'} })
-        }
+            const {email, walletAddress} = req.body;
+           if(!email) {
+                return sendError(res, { status: 400, error: {message : 'Email required'} })
+            }
+            if(!walletAddress) {
+                return sendError(res, { status: 400, error: {message : 'Wallet Address required'} })
+            }
             let result = await AdminModel.login(req.body);
-            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            console.log(result)
+            if (result.error) return sendError(res, { status: 400, error: result.error });
             const token: string = await AdminModel.generateJwtToken(result);
             return sendSuccess(res, { message: 'SUCCESS', token });
         } catch (error: any) {
