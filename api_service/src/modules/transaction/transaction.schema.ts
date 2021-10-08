@@ -13,6 +13,7 @@ class TransactionSchema extends Schema {
     private createSchema() {
         this.schema = new Schema({
             user:{ type: Schema.Types.ObjectId, ref: 'User'},
+            from:{type:Schema.Types.ObjectId, ref:'User'},
             walletAddress: { type: String, index: true, trim: true, required: true },
             nft:{type:Schema.Types.ObjectId, ref: 'nft'},
             nftAddress: { type: String, index: true, trim: true},
@@ -25,7 +26,7 @@ class TransactionSchema extends Schema {
             default: 'PENDING' },
         }, { timestamps: true });
         
-        this.schema.index({transactionHash:1, walletAddress: 1});
+        this.schema.index({transactionHash: 1, walletAddress: 1});
     }
 }
 

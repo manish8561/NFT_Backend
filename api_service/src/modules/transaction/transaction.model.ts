@@ -15,6 +15,7 @@ class TransactionModel {
 
             transaction.user = data.user['_id'];
             transaction.walletAddress=data.user['walletAddress'];
+            transaction.from = data.from;
             // nft:{type:Schema.Types.ObjectId, ref: 'nft'},
             transaction.nft = data.nft;
             transaction.nftAddress = data.nftAddress;
@@ -88,7 +89,7 @@ class TransactionModel {
                 limit = 10;
             }
             const count = await Transaction.countDocuments({ nft: id, status: 'COMPLETED'});
-            const res = await Transaction.find({ nft: id, status: 'COMPLETED'}).populate('user').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            const res = await Transaction.find({ nft: id, status: 'COMPLETED'}).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
             return {
                 count,
                 res
@@ -121,7 +122,7 @@ class TransactionModel {
                 query.createdAt = { $gte : startDate, $lt: endDate };
             }
             const count = await Transaction.countDocuments(query);
-            const result =  await Transaction.find(query).populate('user').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            const result =  await Transaction.find(query).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
             return {
                 count,
                 result

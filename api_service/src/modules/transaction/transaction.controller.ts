@@ -76,6 +76,7 @@ class TransactionController implements Interfaces.Controller {
         }
     }
     /**
+     * for admin transaction listing
      * @param  {any} req
      * @param  {Response} res
      */

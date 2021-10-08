@@ -41,6 +41,7 @@ class NftModel {
             const saveData = await nft.save();
             const data = {
                 user,
+                from: null,
                 nftAddress: nft.nftAddress,
                 nft: saveData['_id'],
                 networkId: nft.networkId,

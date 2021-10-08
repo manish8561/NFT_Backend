@@ -46,6 +46,7 @@ class SellModel {
             const saveData = await sellNft.save();
             const obj: any = {
                 user,
+                from:null,
                 nftAddress: sellNft.nftAddress,
                 nft: data.nft,
                 networkId: sellNft.networkId,
@@ -76,21 +77,21 @@ class SellModel {
         try {
             const isError = await _validations({ _id })
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
-            const nft:any = await Sell.findOne({ nft:_id, status:'ACTIVE' });
-            if(nft){
-                if(nft.transactionStatus === 'PROCESSING'){
-                    const result = await Helper.Web3Helper.getTransactionStatus(nft.transactionHash);
+            const nftSell:any = await Sell.findOne({ nft:_id, status:'ACTIVE' });
+            if(nftSell){
+                if(nftSell.transactionStatus === 'PROCESSING'){
+                    const result = await Helper.Web3Helper.getTransactionStatus(nftSell.transactionHash);
                     if(result && result.status) {
-                        nft.transactionStatus = 'COMPLETED';
-                        nft.save();
-                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'COMPLETED'});
+                        nftSell.transactionStatus = 'COMPLETED';
+                        nftSell.save();
+                        TransactionModel.setTransactionStatus({transactionHash: nftSell.transactionHash, status: 'COMPLETED'});
                         return {
-                            data : nft,
+                            data : nftSell,
                             status : 1,
                             message : 'Transaction completed'
                         };
                     } else if(result == null) {
-                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'PROCESSING'});
+                        TransactionModel.setTransactionStatus({transactionHash: nftSell.transactionHash, status: 'PROCESSING'});
                         return {
                             data: {},
                             status: 0,
@@ -98,10 +99,10 @@ class SellModel {
                         }
 
                     } else if(result && !result.status) {
-                        nft.transactionStatus = 'FAILED';
-                        nft.status = 'INACTIVE';
-                        nft.save();
-                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'FAILED'});
+                        nftSell.transactionStatus = 'FAILED';
+                        nftSell.status = 'INACTIVE';
+                        nftSell.save();
+                        TransactionModel.setTransactionStatus({transactionHash: nftSell.transactionHash, status: 'FAILED'});
                         return {
                             data : {},
                             status: 2,
@@ -110,12 +111,12 @@ class SellModel {
                     }
                 }
 
-                if(nft && nft.expirationDate){
-                    if((new Date(nft.expirationDate).getTime()) <= Date.now()) {
-                        nft.transactionStatus = 'FAILED';
-                        nft.status = 'INACTIVE';
-                        TransactionModel.setTransactionStatus({transactionHash: nft.transactionHash, status: 'FAILED'});
-                        nft.save();
+                if(nftSell && nftSell.expirationDate){
+                    if((new Date(nftSell.expirationDate).getTime()) <= Date.now()) {
+                        nftSell.transactionStatus = 'FAILED';
+                        nftSell.status = 'INACTIVE';
+                        TransactionModel.setTransactionStatus({transactionHash: nftSell.transactionHash, status: 'FAILED'});
+                        nftSell.save();
                         return {
                             data : {},
                             status: 2,
@@ -125,7 +126,7 @@ class SellModel {
                 }
 
                 return {
-                    data : nft,
+                    data : nftSell,
                     status : 1,
                     message : 'Transaction completed'
                 }
