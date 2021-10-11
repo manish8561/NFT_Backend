@@ -34,8 +34,6 @@ class UserModel {
             await createUser.save();
             return createUser;
         } catch (error) {
-            console.log(error, 'insert');
-
             return errors('SOMETHING_WENT_WRONG', error);
         }
     }
@@ -97,7 +95,6 @@ class UserModel {
      */
     private async _isUserAddressExists(walletAddress: string): Promise<any>  {
         const result = await User.findOne({ walletAddress });
-        console.log('result',result);
         return result;
     }
     /**

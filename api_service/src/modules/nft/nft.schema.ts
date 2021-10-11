@@ -11,13 +11,13 @@ class NftSchema extends Schema {
 
     private createSchema() {
         this.schema = new Schema({
-            nftAddress: {type: String, required:true, trim:true},
+            nftAddress: {type: String, required:true, trim:true },
             name: { type: String, required: true },
-            fileType: {type: String, default: 'image'},
-            fileHash: { type: String, required: true },//file uploaded to ipfs
+            fileType: { type: String, default: 'image' },
+            fileHash: { type: String, required: true },
             externalLink: { type: String, default: "" },
             description: { type: String, default: "" },
-            tokenUri: { type: String, required:true, unique: true },//for meta data
+            tokenUri: { type: String, required:true, unique: true },
             supply: { type: Number, default: 1 },
             royality: { type: Number, max: 100, min: 0, required: true },
             networkId: { type: String, required: true },

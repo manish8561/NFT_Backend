@@ -55,7 +55,6 @@ class SellController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {
-            console.log(error);
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
@@ -88,7 +87,7 @@ class SellController implements Interfaces.Controller {
         } = Helper;
         try {
             if(Object.keys(req.body).length === 0) {
-                return sendError(res, { status: 400, error: {message : 'No data posted'} })
+                return sendError(res, { status: 400, error: { message : 'No data posted' } })
             }
             const result: any = await SellModel.updateSellNft(req.body);
             if (result.error) return sendError(res, { status: 400, error: result.error });

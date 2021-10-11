@@ -135,6 +135,33 @@ class TransactionModel {
             throw error;
         }
     }
+
+    public async getTransactionsByUserId(data: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED } }
+        } = Helper;
+        try {
+            let { page, limit, id } = data;
+            const isError = await _validations({_id: id});
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            if(!page){
+                page = 1;
+            }
+            if(!limit){
+                limit = 10;
+            }
+            const count = await Transaction.countDocuments({ nft: id, status: 'COMPLETED'});
+            const res = await Transaction.find({ nft: id, status: 'COMPLETED'}).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                res
+            };
+        } catch(error) {
+            throw error;
+        }
+    }
 }
 
 export default new TransactionModel();

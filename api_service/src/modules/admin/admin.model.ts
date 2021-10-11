@@ -15,7 +15,7 @@ class AdminModel {
             const { walletAddress, wallet, email } = _user;
             const isError = await _validations({ walletAddress, email });
             if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
-            const user = await User.findOne({walletAddress, email, role:'ADMIN'});
+            const user = await User.findOne({ walletAddress, email, role:'ADMIN' });
             if(user){
                 return user;
             } else {
@@ -25,7 +25,6 @@ class AdminModel {
                 }
             }
         } catch (error) {
-            console.log(error, 'model')
             throw error;
         }
     }
@@ -45,7 +44,7 @@ class AdminModel {
      */
     public async details(_id:string):Promise<any>{
         try {
-            return await User.findOne({_id});
+            return await User.findOne({ _id });
         } catch (error) {
             return error;
         }

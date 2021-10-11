@@ -30,11 +30,10 @@ class TransactionController implements Interfaces.Controller {
     private async add(req: any, res: Response) {
         const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
-            
             const data = req.body;
             data.user = req.user;
             let result = await TransactionModel.add(data);
-            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            if (result.error) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
@@ -50,7 +49,7 @@ class TransactionController implements Interfaces.Controller {
             const data = req.body;
             data.user = req.user;
             let result = await TransactionModel.list(data);
-            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
@@ -69,7 +68,7 @@ class TransactionController implements Interfaces.Controller {
                 return sendError(res, { status: 400, error })
             }
             const result = await TransactionModel.getTransactionByNftId(req.body);
-            if(result.errors) return sendError(res, { status: 400, error: result.errors });
+            if(result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });

@@ -101,11 +101,10 @@ class UserController implements Interfaces.Controller {
         };
         transporter.sendMail(mailOptions, function(error: any, info: any){
             if (error) {
-            console.log(error);
-            res.send({status: 400, message: 'Error'}) 
+                res.send({status: 400, message: 'Error'}) 
             }
             else {
-            res.send({ status: 200,message: 'Sent Successfully' })
+                res.send({ status: 200,message: 'Sent Successfully' })
             }
         });    
     }
@@ -147,6 +146,8 @@ class UserController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
+
+
 }
 
 export default UserController;
