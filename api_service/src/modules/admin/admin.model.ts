@@ -13,7 +13,6 @@ class AdminModel {
         try {
             _user.walletAddress=_user.walletAddress.toLowerCase();
             const { walletAddress, wallet, email } = _user;
-            console.log(walletAddress, email, 'admin')
             const isError = await _validations({ walletAddress, email });
             if (Object.keys(isError).length > 0) return errors('ALL_FIELDS_ARE_REQUIRED', isError);
             const user = await User.findOne({walletAddress, email, role:'ADMIN'});
@@ -22,7 +21,7 @@ class AdminModel {
             } else {
                  return {
                     status: 400,
-                    errors: 'Wrong credentials'
+                    error: 'Wrong credentials'
                 }
             }
         } catch (error) {

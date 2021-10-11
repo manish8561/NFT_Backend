@@ -2,6 +2,7 @@ import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
 import AdminModel from "./admin.model";
 import { Helper } from '../../helpers';
+import ValidateAdminJWT from "../../middlewares/admin.middleware";
 
 class AdminController implements Interfaces.Controller {
 
@@ -15,7 +16,7 @@ class AdminController implements Interfaces.Controller {
         this.router
             .all(`${this.path}/*`)
             .post(`${this.path}/login`, this.adminLogin)
-            .post(`${this.path}/userUpdate`, this.adminUpdateUser)
+            .post(`${this.path}/userUpdate`, ValidateAdminJWT, this.adminUpdateUser)
     }
     /**
      * @param  {Request} req
@@ -32,7 +33,6 @@ class AdminController implements Interfaces.Controller {
                 return sendError(res, { status: 400, error: {message : 'Wallet Address required'} })
             }
             let result = await AdminModel.login(req.body);
-            console.log(result)
             if (result.error) return sendError(res, { status: 400, error: result.error });
             const token: string = await AdminModel.generateJwtToken(result);
             return sendSuccess(res, { message: 'SUCCESS', token });

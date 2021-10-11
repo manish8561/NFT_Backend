@@ -102,10 +102,10 @@ class TransactionModel {
      * @param  {any} data
      * @returns Promise
      */
-    public async fetchTransactionData(data: any): Promise<any> {
+    public async fetchTransactionData(_data: any): Promise<any> {
         try {
             let query: any = {}
-            let { page, limit, filters, startDate, endDate } = data;
+            let { page, limit, filters, startDate, endDate } = _data;
             page = Number(page) || 1;
             limit = Number(limit) || 10;
             if(filters && filters.search){
@@ -121,11 +121,11 @@ class TransactionModel {
             if(startDate && endDate) {
                 query.createdAt = { $gte : startDate, $lt: endDate };
             }
-            const count = await Transaction.countDocuments(query);
-            const result =  await Transaction.find(query).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            const count: any = await Transaction.countDocuments(query);
+            const data: any =  await Transaction.find(query).populate('user').populate('nft').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
             return {
                 count,
-                result
+                data
             }
         } catch(error: any) {
             throw error;

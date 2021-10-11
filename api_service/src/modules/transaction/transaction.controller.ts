@@ -88,7 +88,7 @@ class TransactionController implements Interfaces.Controller {
                 return sendError(res, { status: 400, error })
             }
             const result = await TransactionModel.fetchTransactionData(req.body);
-            if(result.errors) return sendError(res, { status: 400, error: result.errors });
+            if(result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });

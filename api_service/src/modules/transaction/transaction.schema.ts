@@ -15,7 +15,7 @@ class TransactionSchema extends Schema {
             user:{ type: Schema.Types.ObjectId, ref: 'User'},
             from:{type:Schema.Types.ObjectId, ref:'User'},
             walletAddress: { type: String, index: true, trim: true, required: true },
-            nft:{type:Schema.Types.ObjectId, ref: 'nft'},
+            nft:{type:Schema.Types.ObjectId, ref: 'Nft'},
             nftAddress: { type: String, index: true, trim: true},
             networkId: { type: String, required: true },
             transactionHash: {type: String, default:""},
