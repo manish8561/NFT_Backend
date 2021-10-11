@@ -105,7 +105,7 @@ class TransactionModel {
     public async fetchTransactionData(_data: any): Promise<any> {
         try {
             let query: any = {}
-            let { page, limit, filters, startDate, endDate } = _data;
+            let { page, limit, filters, startDate, endDate, walletAddress } = _data;
             page = Number(page) || 1;
             limit = Number(limit) || 10;
             if(filters && filters.search){
@@ -120,6 +120,10 @@ class TransactionModel {
             }
             if(startDate && endDate) {
                 query.createdAt = { $gte : startDate, $lt: endDate };
+            }
+
+            if(walletAddress) {
+                query.walletAddress = walletAddress.toLowerCase();
             }
             const count: any = await Transaction.countDocuments(query);
             const data: any =  await Transaction.find(query).populate('user').populate('nft').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
