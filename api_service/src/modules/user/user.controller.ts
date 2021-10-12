@@ -14,6 +14,7 @@ class UserController implements Interfaces.Controller {
     constructor() {
         this.initializeRoutes();
     }
+    
     private async initializeRoutes() {
         this.router
             .all(`${this.path}/*`)

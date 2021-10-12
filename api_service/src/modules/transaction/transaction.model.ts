@@ -144,7 +144,7 @@ class TransactionModel {
         } = Helper;
         try {
             let { page, limit, id } = data;
-            const isError = await _validations({_id: id});
+            const isError = await _validations({ _id: id });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             if(!page){
                 page = 1;
@@ -152,8 +152,8 @@ class TransactionModel {
             if(!limit){
                 limit = 10;
             }
-            const count = await Transaction.countDocuments({ nft: id, status: 'COMPLETED'});
-            const res = await Transaction.find({ nft: id, status: 'COMPLETED'}).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            const count = await Transaction.countDocuments({ user: id, status: 'COMPLETED'});
+            const res = await Transaction.find({ user: id, status: 'COMPLETED'}).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
             return {
                 count,
                 res

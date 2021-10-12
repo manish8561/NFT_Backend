@@ -215,7 +215,6 @@ class NftModel {
                  ]}
             }   
             query.creator = user['_id'];
-            console.log(query,user);
             page = Number(page) || 1;
             limit = Number(limit) || 10;
             let count: any = await Nft.countDocuments(query);
@@ -232,7 +231,7 @@ class NftModel {
     public async getOwnerNFT(_data: any): Promise<any> {
         try {
             let { page, limit, filters, user } = _data;
-            let query: any = {  };
+            let query: any = {};
             if(filters && filters.search){
                 let { search } = filters;
                 search = search.toString();
@@ -244,7 +243,6 @@ class NftModel {
                  ]}
             }   
             query.owner = user['_id'];
-            console.log(query,user);
             page = Number(page) || 1;
             limit = Number(limit) || 10;
             let count: any = await Nft.countDocuments(query);

@@ -3,6 +3,7 @@ import * as Interfaces from '../../interfaces';
 import CollectionModel from "./collection.model";
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
+import ValidateAdminJWT from "../../middlewares/admin.middleware";
 
 class CollectionController implements Interfaces.Controller {
 
@@ -17,10 +18,14 @@ class CollectionController implements Interfaces.Controller {
         this.router
             .all(`${this.path}/*`)
             .post(`${this.path}/add`, ValidateJWT, this.add)
+            .get(`${this.path}/delete/:id`,ValidateJWT, this.deleteCollection)
             .post(`${this.path}/getCollections`, ValidateJWT, this.getCollections)
             .post(`${this.path}/getItemsByCollectionId`, ValidateJWT, this.getItemsById)
-            .post(`${this.path}/:id`, ValidateJWT, this.collectionByIdData)
             .get(`${this.path}/isSlugExisted`, ValidateJWT, this.isSlugExisted)
+            .post(`${this.path}/adminGetCollection`,ValidateAdminJWT, this.adminGetCollections)
+            .post(`${this.path}/adminUpdateCollection`,ValidateAdminJWT, this.updateCollectionsByAdmin)
+            .get(`${this.path}/adminDeleteCollection/:id`,ValidateAdminJWT, this.adminDeleteCollection)
+            .post(`${this.path}/:id`, ValidateJWT, this.collectionByIdData)
     }
     /**
      * @param  {any} req
@@ -123,7 +128,87 @@ class CollectionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async adminGetCollections(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const result = await CollectionModel.getCollectionByAdmin(req.body);
+            if(result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async adminDeleteCollection(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const id = req.params.id;
+            if(!id) {
+                return sendError(res, { status: 400, error: { message: 'Id is missing' } });
+            }
+            const result = await CollectionModel.deleteCollectionByAdmin(id);
+            if(result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async deleteCollection(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const id = req.params.id;
+            if(!id) {
+                return sendError(res, { status: 400, error: { message: 'Id is missing' } });
+            }
+            const result = await CollectionModel.deleteCollectionByAdmin(id);
+            if(result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async updateCollectionsByAdmin(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const id = req.body.id;
+            if(!id) {
+                return sendError(res, { status: 400, error: { message: 'Id is missing' } });
+            }
+            const result = await CollectionModel.updateCollectionByAdmin(req.body);
+            if(result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
 }
 
 export default CollectionController;
