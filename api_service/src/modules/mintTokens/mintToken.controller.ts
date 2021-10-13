@@ -50,7 +50,7 @@ class MintTokenController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
 
             /** return seccess - registered user */
-            return sendSuccess(res, { message: "Fetched Minted Data", data: { file: result } });
+            return sendSuccess(res, { message: "Upload file successfully", data: { file: result } });
         } catch (error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }

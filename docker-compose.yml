@@ -9,10 +9,10 @@ services:
     image: redis
     networks:
       - my_network   
-  backend_s:
+  api_s:
     ports:
       - '0.0.0.0:3001:3001'
-    container_name: backend_s
+    container_name: api_s
     restart: always
     build: ./api_service
     env_file: ./config/api.env
