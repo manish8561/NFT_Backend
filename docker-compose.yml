@@ -19,7 +19,7 @@ services:
     environment:
       - NODE_ENV=prod
     volumes:
-      - '/data/dvolumes/poc/api_service:/data'
+      - '/data/dvolumes/poc/api_service:/src/images'
     networks:
       my_network:
         ipv4_address: 10.10.11.2
