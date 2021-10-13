@@ -31,7 +31,7 @@ class App {
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(`${path.resolve("src", "images")}`, express.static(path.join(path.resolve("src", "images"))));
+        this.app.use('/images', express.static('src/images'));
     };
 
     /**
@@ -44,7 +44,7 @@ class App {
         });
 
         /** To check if server is running */
-        this.app.use("/v1/wallets/status", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        this.app.use("/v1/wallets/status", (req: express.Request, res: express.Response) => {
             return Helper.Response.sendSuccess(res, { isSuccess: true, results: { message: `Service running on Port ${this.port}.` } });
         })
     };

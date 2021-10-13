@@ -32,8 +32,9 @@ class MintTokenModel {
                     errors : 'File is empty'
                 }
             }
-            // return `10.1.1.143:3001/api${file['path']}`;
-            return `https://nft-poc.staging-host.com${file['path']}`;
+            // console.log(file, 'before');
+            // return `10.1.1.143:3001/images/${file['filename']}`;
+            return `https://nft-poc.staging-host.com/images/${file['filename']}`;
 
         } catch (error) {
             const { Response: { errors }, ResMsg: { errors: { SOMETHING_WENT_WRONG } } } = Helper;
