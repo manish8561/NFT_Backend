@@ -5,7 +5,7 @@ services:
     ports:
       - '0.0.0.0:6379:6379'
     volumes:
-      - '/data/dvolumes/safechain/docker-redis:/data'
+      - '/data/dvolumes/poc/docker-redis:/data'
     image: redis
     networks:
       - my_network   
@@ -18,6 +18,8 @@ services:
     env_file: ./config/api.env
     environment:
       - NODE_ENV=prod
+    volumes:
+      - '/data/dvolumes/poc/api_service:/data'
     networks:
       my_network:
         ipv4_address: 10.10.11.2
