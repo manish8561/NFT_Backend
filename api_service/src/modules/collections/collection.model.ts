@@ -207,7 +207,10 @@ class CollectionModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async updateCollectionByAdmin(data: any): Promise<any> {
         const { 
             Validate: { _validations }, 

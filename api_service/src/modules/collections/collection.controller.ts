@@ -187,7 +187,6 @@ class CollectionController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-    
     /**
      * @param  {any} req
      * @param  {Response} res

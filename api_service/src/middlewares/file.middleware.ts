@@ -14,6 +14,7 @@ const storage = multer.diskStorage({
         let error: any = new Error("Invalid Image");
         if (isValidFile) error = null;
         const pathToimages =  path.resolve("src", "images");
+        console.log(pathToimages,'file upload path')
         cb(error, pathToimages);
     },
 
