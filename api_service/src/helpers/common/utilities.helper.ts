@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import * as bcrypt from 'bcryptjs';
 import * as CryptoJS from 'crypto-js';
 
-const ONE_DAY = 60*2; /** One day */
+const ONE_DAY = 60* 60 * 24 * 1; /** One day */
 
 class Utilities {
 
