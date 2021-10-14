@@ -19,14 +19,15 @@ class BuyModel {
         } = Helper;
         try {
             const { nft, price, networkId, transactionHash, token, user, nftAddress  } = data;
+
             const isError = await _validations({_id: nft, price, networkId, transactionHash, nftAddress });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             
            const nftTemp:any = await NFT.findOne({_id:nft});
            const from = nftTemp.owner;
            nftTemp.owner = user['_id'];
-           const saveData = await nftTemp.save();
 
+           const saveData = await nftTemp.save();
             const obj: any = {
                 user,
                 from,
@@ -40,7 +41,7 @@ class BuyModel {
                 transactionHash: transactionHash
             }
             TransactionModel.add(obj);
-            Sell.updateMany({ nft }, { $set: { status: "INACTIVE"}},{upsert:false});
+            await Sell.updateMany({ nft }, { $set: { status: "INACTIVE"}},{upsert:false});
             return saveData;
         } catch(error: any) {
             throw error;
