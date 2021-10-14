@@ -141,7 +141,6 @@ class NftModel {
                 query = { $or : [
                     { name: new RegExp(search, 'i') },
                     { transactionHash: new RegExp(search, 'i') },
-                    { tokenId: new RegExp(search, 'i') },
                     { networkId: new RegExp(search, 'i') },
                     { description: new RegExp(search, 'i') }
                 ]};
