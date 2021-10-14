@@ -19,10 +19,7 @@ import { Helper } from '../helpers';
         if(decoded && decoded.role === 'ADMIN') {
             next();
         } else {
-            return {
-                status : 400,
-                message: 'Only admin has access'
-            }
+          return sendError(res, { status: 403, error : {message:'Only Admin has the access.'} });
         }
         // next();
     });

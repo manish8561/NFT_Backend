@@ -1,4 +1,3 @@
-import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import User from './user.schema';
 
@@ -20,7 +19,7 @@ class UserModel {
             if (isRegistered) return isRegistered;
             return await this._createNewUser(_user);
         } catch (error) {
-            return errors('SOMETHING_WENT_WRONG', error);
+            throw error;
         }
     }
     /**
@@ -35,12 +34,13 @@ class UserModel {
             await createUser.save();
             return createUser;
         } catch (error) {
-            console.log(error, 'insert');
-
             return errors('SOMETHING_WENT_WRONG', error);
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async updateUserProfile(data: any): Promise<any> {
         const {
             Validate: { _validations },
@@ -66,7 +66,10 @@ class UserModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async updateUserVerifyStatus(data: any): Promise <any> {
         const {
             Validate: { _validations },
@@ -91,7 +94,8 @@ class UserModel {
      * @returns Promise
      */
     private async _isUserAddressExists(walletAddress: string): Promise<any>  {
-        return await User.findOne({ walletAddress });
+        const result = await User.findOne({ walletAddress });
+        return result;
     }
     /**
      * @param  {any} user
@@ -113,10 +117,32 @@ class UserModel {
             return error;
         }
     }
-
-    public async fetchAllUsers(): Promise<any> {
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async fetchAllUsers(data: any): Promise<any> {
         try {
-            return await User.find({ role: {$ne: 'ADMIN'} });
+            let query: any = { role: { $ne: 'ADMIN' } };
+            let { page, limit, filters } = data;
+            if(filters && filters.search){
+                let { search } = filters;
+                search = search.toString();
+                query = {$or:[{username:new RegExp(search,'i')},{email:new RegExp(search,'i')} ]};
+                query.role= { $ne: 'ADMIN' };
+            }   
+            if(filters && filters.walletAddress){
+                query.walletAddress = filters.walletAddress.toLowerCase();
+                query.role= { $ne: 'ADMIN' };
+            }
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            let count: any = await User.countDocuments(query);
+            let users: any = await User.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                users
+            }
         } catch(error: any) {
             throw error;
         }

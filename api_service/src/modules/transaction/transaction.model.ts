@@ -15,6 +15,7 @@ class TransactionModel {
 
             transaction.user = data.user['_id'];
             transaction.walletAddress=data.user['walletAddress'];
+            transaction.from = data.from;
             // nft:{type:Schema.Types.ObjectId, ref: 'nft'},
             transaction.nft = data.nft;
             transaction.nftAddress = data.nftAddress;
@@ -32,7 +33,10 @@ class TransactionModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async setTransactionStatus(data: any): Promise<any> {
         const { transactionHash , status } = data;
         return Transaction.updateOne({ transactionHash }, { $set: { status }});
@@ -64,12 +68,15 @@ class TransactionModel {
             return error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async getTransactionByNftId(data: any): Promise<any> {
         const { 
             Validate: { _validations }, 
             Response: { errors },
-            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG } }
+            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED } }
         } = Helper;
         try {
             let { page, limit, id } = data;
@@ -81,12 +88,80 @@ class TransactionModel {
             if(!limit){
                 limit = 10;
             }
-            return await Transaction.find({ nft: id, status: 'COMPLETED'}).skip(page-1).limit((page) * limit).sort({ createdAt: -1 });
+            const count = await Transaction.countDocuments({ nft: id, status: 'COMPLETED'});
+            const res = await Transaction.find({ nft: id, status: 'COMPLETED'}).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                res
+            };
         } catch(error) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async fetchTransactionData(_data: any): Promise<any> {
+        try {
+            let query: any = {}
+            let { page, limit, filters, startDate, endDate, walletAddress } = _data;
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            if(filters && filters.search){
+                let { search } = filters;
+                search = search.toString();
+                query = {$or:[
+                    { transactionHash: new RegExp(search,'i') },
+                    { transactionType: new RegExp(search,'i') },
+                    { token: new RegExp(search,'i') },
+                    { nftAddress: new RegExp(search,'i') }
+                 ]}
+            }
+            if(startDate && endDate) {
+                query.createdAt = { $gte : startDate, $lt: endDate };
+            }
 
+            if(walletAddress) {
+                query.walletAddress = walletAddress.toLowerCase();
+            }
+            const count: any = await Transaction.countDocuments(query);
+            const data: any =  await Transaction.find(query).populate('user').populate('nft').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                data
+            }
+        } catch(error: any) {
+            throw error;
         }
     }
 
+    public async getTransactionsByUserId(data: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED } }
+        } = Helper;
+        try {
+            let { page, limit, id } = data;
+            const isError = await _validations({ _id: id });
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            if(!page){
+                page = 1;
+            }
+            if(!limit){
+                limit = 10;
+            }
+            const count = await Transaction.countDocuments({ user: id, status: 'COMPLETED'});
+            const res = await Transaction.find({ user: id, status: 'COMPLETED'}).populate('user').populate('from').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                res
+            };
+        } catch(error) {
+            throw error;
+        }
+    }
 }
 
 export default new TransactionModel();

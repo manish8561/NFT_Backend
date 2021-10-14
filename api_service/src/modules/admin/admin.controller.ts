@@ -1,10 +1,8 @@
-import { NextFunction, Response, Request, Router } from "express";
-var nodemailer = require('nodemailer');
+import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
-import UserModel from "../user/user.model";
 import AdminModel from "./admin.model";
 import { Helper } from '../../helpers';
-import ValidateJWT from "../../middlewares/jwt.middleware";
+import ValidateAdminJWT from "../../middlewares/admin.middleware";
 
 class AdminController implements Interfaces.Controller {
 
@@ -18,25 +16,47 @@ class AdminController implements Interfaces.Controller {
         this.router
             .all(`${this.path}/*`)
             .post(`${this.path}/login`, this.adminLogin)
+            .post(`${this.path}/userUpdate`, ValidateAdminJWT, this.adminUpdateUser)
     }
     /**
      * @param  {Request} req
      * @param  {Response} res
      */
     private async adminLogin(req: Request | any, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
-           if(Object.keys(req.body).length === 0) {
-            return sendError(res, { status: 400, error: {message : 'No data posted'} })
-        }
+            const {email, walletAddress} = req.body;
+           if(!email) {
+                return sendError(res, { status: 400, error: {message : 'Email required'} })
+            }
+            if(!walletAddress) {
+                return sendError(res, { status: 400, error: {message : 'Wallet Address required'} })
+            }
             let result = await AdminModel.login(req.body);
-            if (result.errors) return sendError(res, { status: 400, error: result.errors });
             if (result.error) return sendError(res, { status: 400, error: result.error });
-            console.log(result,'admin');
             const token: string = await AdminModel.generateJwtToken(result);
             return sendSuccess(res, { message: 'SUCCESS', token });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {Request|any} req
+     * @param  {Response} res
+     */
+    private async adminUpdateUser(req: Request | any, res: Response) {
+        const { Response: { sendError, sendSuccess }, ResMsg: { 
+            errors: { SOMETHING_WENT_WRONG }
+        } } = Helper;
+        try {
+           if(Object.keys(req.body).length === 0) {
+                return sendError(res, { status: 400, error: {message : 'No data posted'} })
+            }
+            let result = await AdminModel.adminUpdateUser(req.body);
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { message: 'SUCCESS', result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 

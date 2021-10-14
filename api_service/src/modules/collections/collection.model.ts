@@ -1,4 +1,3 @@
-import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import Collection from './collection.schema';
 import Nft from '../nft/nft.schema';
@@ -17,7 +16,7 @@ class CollectionModel {
             ResMsg: { errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
 
-        try {
+        try { 
             let { page, limit, id } = data;
             const count = await Nft.countDocuments({ collectiondb: id });
             if (count === 0) {
@@ -41,7 +40,10 @@ class CollectionModel {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async getCollection(data: any): Promise<any> {
         const {
             Response: { errors },
@@ -56,7 +58,10 @@ class CollectionModel {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }
-
+    /**
+     * @param  {any} id
+     * @returns Promise
+     */
     public async getCollectionDataById(id: any): Promise<any> {
         const {
             Response: { errors },
@@ -126,6 +131,107 @@ class CollectionModel {
      */
     private async _isCollectionCreated(name: string): Promise<any> {
         return await Collection.findOne({ name: { $regex: name, $options: 'i' } });
+    }
+    /**
+     * @param  {any} _data
+     * @returns Promise
+     */
+    public async getCollectionByAdmin(_data: any): Promise<any> {
+        const {
+            Response: { errors },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG } },
+            Validate: { _validations }
+        } = Helper;
+
+        try {
+            let { page, limit, filters } = _data;
+            let query: any = {};
+            if(filters && filters.search){
+                let { search } = filters;
+                search = search.toString();
+                query = {$or:[
+                    { name: new RegExp(search, 'i' ) },
+                    { description: new RegExp(search, 'i') },
+                    { blockChain: new RegExp(search, 'i') },
+                    { status: new RegExp(search, 'i') }
+                 ]};
+                if(filters.id){
+                    query.user = filters.id;
+                }
+            }   
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            let count: any = await Collection.countDocuments(query);
+            let data: any =  await Collection.find(query).populate('user').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                data
+            }
+        } catch (error) {
+            return errors(SOMETHING_WENT_WRONG, error);
+        }
+    }
+    /**
+     * @param  {any} _id
+     * @returns Promise
+     */
+    public async deleteCollection(_id: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors }
+        } = Helper;
+        try {
+            const isError = await _validations({ _id });
+            if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
+            await Collection.deleteOne({ _id });
+            return true;
+        } catch(error: any) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {any} _id
+     * @returns Promise
+     */
+    public async deleteCollectionByAdmin(_id: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors }
+        } = Helper;
+        try {
+            const isError = await _validations({ _id });
+            if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
+            await Collection.deleteOne({ _id });
+            return true;
+        } catch(error: any) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async updateCollectionByAdmin(data: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors }
+        } = Helper;
+        try {   
+            const { id, name, logo, description, externalLink, banner, featuredBanner,
+                links, royality, payoutWalletAddress, collaborators, blockChain, displayTheme,
+                 paymentToken, sensitiveContent, status }= data;
+            const isError = await _validations({ _id: id });
+            if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
+            let obj = {
+                name, logo, description, externalLink, banner, featuredBanner,
+                links, royality, payoutWalletAddress, collaborators, blockChain, displayTheme,
+                paymentToken, sensitiveContent, status
+            }
+            await Collection.updateOne({ _id: id }, { $set : obj }, { upsert: false });
+            return true;
+        } catch(error: any) {
+            throw error;
+        }
     }
 
 }

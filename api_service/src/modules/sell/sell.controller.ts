@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Router } from "express";
 import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
@@ -18,12 +18,17 @@ class SellController implements Interfaces.Controller {
             .all(`${this.path}/*`)
             .post(`${this.path}/sellItem`, ValidateJWT, this.sell_Item)
             .get(`${this.path}/getSellNft/:id`, this.getSellNftDetails)
+            .get(`${this.path}/cancelNft/:id`, ValidateJWT, this.cancelSellNFT)
+            .post(`${this.path}/update`, ValidateJWT, this.updateSellNFT)
     }
-
-    private async sell_Item(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async sell_Item(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
-            ResMsg: { nft: { SELL_NFT } }
+            ResMsg: { nft: { SELL_NFT }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
         try {
             const data:any = req.body;
@@ -32,13 +37,17 @@ class SellController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { message: SELL_NFT });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
-    private async getSellNftDetails(req: any, res: Response, next: NextFunction) {
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async getSellNftDetails(req: any, res: Response) {
         const {
-            Response: { sendError, sendSuccess }
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
         } = Helper;
         try {
             const _id: any = req.params.id;
@@ -46,7 +55,45 @@ class SellController implements Interfaces.Controller {
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async cancelSellNFT(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const id: any = req.params.id;
+            const result: any = await SellModel.cancelNFT(id);
+            if (result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async updateSellNFT(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            if(Object.keys(req.body).length === 0) {
+                return sendError(res, { status: 400, error: { message : 'No data posted' } })
+            }
+            const result: any = await SellModel.updateSellNft(req.body);
+            if (result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 }

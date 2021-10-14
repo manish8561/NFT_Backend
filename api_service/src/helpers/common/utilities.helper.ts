@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import * as bcrypt from 'bcryptjs';
 import * as CryptoJS from 'crypto-js';
 
-const ONE_DAY = 60 * 60 * 24 * 1; /** One day */
+const ONE_DAY = 60* 60 * 24 * 1; /** One day */
 
 class Utilities {
 
@@ -66,6 +66,14 @@ class Utilities {
         try {
             const saltRounds = 12;
             return await bcrypt.hash(address, saltRounds);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    public async capitalize_Words(str: any): Promise<any> {
+        try {
+            return str.replace(/\w\S*/g, (txt: any) => {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
         } catch (error) {
             return error;
         }

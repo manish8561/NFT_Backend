@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Response, Request, Router } from "express";
 import * as Interfaces from '../../interfaces';
 
 import { Helper } from '../../helpers';
@@ -20,6 +20,8 @@ class CategoryController implements Interfaces.Controller {
             .get(`${this.path}/delete/:id`, ValidateAdminJWT, this.adminDeleteCategory)
             .put(`${this.path}/update`, ValidateAdminJWT, this.adminUpdateCategory)
             .get(`${this.path}/get`, ValidateAdminJWT, this.getAdminCategory)
+            .get(`${this.path}/userCategories`, this.getUserCategories)
+
     }
     /**
      * @param  {Request} req
@@ -30,7 +32,7 @@ class CategoryController implements Interfaces.Controller {
         try {
             let result: any = await CategoryModel.getCategories();
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
-            return sendSuccess(res, { message: 'SUCCESS', result });
+            return sendSuccess(res, { message: 'SUCCESS', data: result });
         } catch (error: any) {
             return sendError(res, { status: 400, error });
         }
@@ -40,13 +42,16 @@ class CategoryController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async adminAddCategory(req: Request | any, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
+            if (Object.keys(req.body).length < 1) {
+                return sendError(res, { status: 400, error: { message: 'No data posted' } });
+            }
             let result: any = await CategoryModel.addCatgories(req.body);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', result });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -54,14 +59,14 @@ class CategoryController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async adminDeleteCategory(req: Request | any, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
             let data: any = req.params;
             let result: any = await CategoryModel.deleteCategory(data.id);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', result });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
     /**
@@ -69,18 +74,32 @@ class CategoryController implements Interfaces.Controller {
      * @param  {Response} res
      */
     private async adminUpdateCategory(req: Request | any, res: Response) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
-            if (Object.keys(req.body).length < 2) {
+            if (Object.keys(req.body).length < 1) {
                 return sendError(res, { status: 400, error: { message: 'Parameter is missing' } });
             }
             let result: any = await CategoryModel.updateCategory(req.body);
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
             return sendSuccess(res, { message: 'SUCCESS', result });
         } catch (error: any) {
-            return sendError(res, { status: 400, error });
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
+    /**
+     * @param  {Request|any} req
+     * @param  {Response} res
+     */
+    private async getUserCategories(req: Request | any, res: Response) {
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
+        try {
+            let result: any = await CategoryModel.getUserCategories();
+            if (result.errors) return sendError(res, { status: 400, error: result.errors });
+            return sendSuccess(res, { message: 'SUCCESS', result });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }        
 }
 
 export default CategoryController;

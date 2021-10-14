@@ -1,10 +1,7 @@
-import mongoose from 'mongoose';
 import { Helper } from '../../helpers';
 import MintTokens from './mintToken.schema'; 
-import * as Interfaces from "../../interfaces";
 
 class MintTokenModel {
-
     constructor() { }
 
     /** 
@@ -23,7 +20,10 @@ class MintTokenModel {
             return errors(SOMETHING_WENT_WRONG, error);
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async uploadFile(data: any): Promise<any> {
         try {
             const { file } = data;
@@ -32,8 +32,9 @@ class MintTokenModel {
                     errors : 'File is empty'
                 }
             }
-            // return `${process.env.API_URL}${file['path']}`;
-            return `http://10.1.1.143:3001${file['path']}`;
+            // console.log(file, 'before');
+            // return `10.1.1.143:3001/images/${file['filename']}`;
+            return `https://nft-poc.staging-host.com/images/${file['filename']}`;
 
         } catch (error) {
             const { Response: { errors }, ResMsg: { errors: { SOMETHING_WENT_WRONG } } } = Helper;

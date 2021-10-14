@@ -4,9 +4,12 @@ import TransactionModel from '../transaction/transaction.model';
 import ABI from '../../bin/abi.json';
 
 class NftModel {
-    contractAddress = process.env.CONTRACT_ADDRESS!;
+    contractAddress = '0x1522b379cB78eAF13bbCCd9b649ceC1D22e27B6A';
     constructor() { }
-
+    /**
+     * @param  {any} _nft
+     * @returns Promise
+     */
     public async add(_nft:any): Promise<any> {
         const { 
             Validate: { _validations }, 
@@ -38,12 +41,13 @@ class NftModel {
             const saveData = await nft.save();
             const data = {
                 user,
+                from: null,
                 nftAddress: nft.nftAddress,
                 nft: saveData['_id'],
                 networkId: nft.networkId,
                 transactionType: 'MINT',
                 status: "PROCESSING",
-                token: 'eth',
+                token: 'ETH',
                 amount: 0,
                 transactionHash: transactionHash
             }
@@ -54,7 +58,10 @@ class NftModel {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} id
+     * @returns Promise
+     */
     public async getNFT(id: any): Promise<any> {
         const { 
             Validate: { _validations }, 
@@ -64,17 +71,18 @@ class NftModel {
             }
         } = Helper;
         try {
-            const nft: any = await Nft.findOne({_id: id}).populate('collectiondb', 'name').populate('creator','username walletAddress')
+            const nft: any = await Nft.findOne({ _id: id }).populate('collectiondb', 'name').populate('creator','username walletAddress')
             .populate('owner','username walletAddress');
             if(nft) {
                 if(nft.status === 'PROCESSING') {
                     const result = await Helper.Web3Helper.getTransactionStatus(nft.transactionHash);
                     if(result && result.status) {
-                        let contract = await Helper.Web3Helper.getContractObject(this.contractAddress, ABI);
-                        console.log(contract);
-                        if(contract && contract.methods) {
-                            const tokenId = await contract.methods.uriToTokenId(nft.tokenUri).call();
-                            console.log(tokenId, 'sdfsdfsdfsfsfd')
+                       if(nft.tokenId === 0){
+                            let contract = await Helper.Web3Helper.getContractObject(this.contractAddress, ABI);
+                            if(contract && contract.methods) {
+                                const tokenId = await contract.methods.uriToTokenId(nft.tokenUri).call();
+                                nft.tokenId = Number(tokenId);
+                            }
                         }
                         nft.status = 'COMPLETED';
                         nft.save();
@@ -114,6 +122,136 @@ class NftModel {
                 }
             }
         } catch (error) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async searchNft(data: any): Promise<any> {
+        try {
+            let query: any = { status: { $eq: 'COMPLETED' } };
+            let { page, limit, filters } = data;
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            if(filters && filters.search) {
+                let { search } = filters;
+                search = search.toString();
+                query = { $or : [
+                    { name: new RegExp(search, 'i') },
+                    { transactionHash: new RegExp(search, 'i') },
+                    { tokenId: new RegExp(search, 'i') },
+                    { networkId: new RegExp(search, 'i') },
+                    { description: new RegExp(search, 'i') }
+                ]};
+                query.status = { $eq: 'COMPLETED' };
+            }
+            const count = await Nft.countDocuments(query);
+            const result = await Nft.find(query).skip((page-1) * limit).populate('creator', 'username email' ).populate('collectiondb', 'name').limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                result
+            };
+        } catch(error: any) {
+            throw error;
+        }
+    }
+
+    public async adminGetNFTList(_data: any): Promise<any> {
+        try {
+            let query: any = {}
+            let { page, limit, filters } = _data;
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            if(filters && filters.search){
+                let { search } = filters;
+                search = search.toString();
+                query = {$or:[
+                    { name: new RegExp(search, 'i' )},
+                    { transactionHash: new RegExp(search,'i') },
+                    { nftAddress: new RegExp(search,'i') },
+                    { description: new RegExp(search, 'i') }
+                 ]}
+            }
+            let count: any = await Nft.countDocuments(query);
+            let data: any = await Nft.find(query).populate('owner').populate('creator').populate('collectiondb').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                data
+            }
+        } catch(error: any) {
+            throw error;
+        }
+    }
+
+    public async adminGetNFT(_id: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { errors: { ALL_FIELDS_ARE_REQUIRED } }
+        } = Helper;
+        try {
+            const isError:any = await _validations({ _id });
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            return await Nft.findOne({ _id }).populate('creator').populate('owner').populate('collectiondb');
+        } catch(error: any) {
+            throw error;
+        }
+    }
+
+    public async getCreatorNFT(_data: any): Promise<any> {
+        try {
+            let { page, limit, filters, user } = _data;
+            let query: any = {  };
+            if(filters && filters.search){
+                let { search } = filters;
+                search = search.toString();
+                query = {$or:[
+                    { name: new RegExp(search, 'i' )},
+                    { transactionHash: new RegExp(search,'i') },
+                    { nftAddress: new RegExp(search,'i') },
+                    { description: new RegExp(search, 'i') }
+                 ]}
+            }   
+            query.creator = user['_id'];
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            let count: any = await Nft.countDocuments(query);
+            let data: any = await Nft.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                data
+            }
+        } catch(error: any) {
+            throw error;
+        }
+    }
+
+    public async getOwnerNFT(_data: any): Promise<any> {
+        try {
+            let { page, limit, filters, user } = _data;
+            let query: any = {};
+            if(filters && filters.search){
+                let { search } = filters;
+                search = search.toString();
+                query = {$or:[
+                    { name: new RegExp(search, 'i' )},
+                    { transactionHash: new RegExp(search,'i') },
+                    { nftAddress: new RegExp(search,'i') },
+                    { description: new RegExp(search, 'i') }
+                 ]}
+            }   
+            query.owner = user['_id'];
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            let count: any = await Nft.countDocuments(query);
+            let data: any = await Nft.find(query).skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                data
+            }
+        } catch(error: any) {
             throw error;
         }
     }

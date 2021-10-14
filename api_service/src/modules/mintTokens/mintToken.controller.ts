@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 import { Helper } from "../../helpers";
 import * as Interfaces from '../../interfaces';
 import MintTokenModel from './mintToken.model';
@@ -17,9 +17,12 @@ class MintTokenController implements Interfaces.Controller {
             .post(`${this.path}/getMintedTokens`, this.getMintedTokens)
             .post(`${this.path}/uploadFile`, FileValidator, this.uploadFile)
     }
-
-    private async getMintedTokens(req: Request, res: Response, next: NextFunction) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async getMintedTokens(req: Request, res: Response) {
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
 
         try {
             const data = req.body;
@@ -29,13 +32,16 @@ class MintTokenController implements Interfaces.Controller {
 
             /** return seccess - registered user */
             return sendSuccess(res, { message: "Fetched Minted Data", data: { logs: result } });
-        } catch (error) {
-            return sendError(res, { status: 500, error: { error } });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
-    private async uploadFile(req: Request, res: Response, next: NextFunction) {
-        const { Response: { sendError, sendSuccess } } = Helper;
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     */
+    private async uploadFile(req: Request, res: Response) {
+        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
 
         try {
             const data: any = { file: req.file, host: req.hostname };
@@ -44,9 +50,9 @@ class MintTokenController implements Interfaces.Controller {
             if (result.errors) return sendError(res, { status: 400, error: result.errors });
 
             /** return seccess - registered user */
-            return sendSuccess(res, { message: "Fetched Minted Data", data: { file: result } });
-        } catch (error) {
-            return sendError(res, { status: 500, error: { error } });
+            return sendSuccess(res, { message: "Upload file successfully", data: { file: result } });
+        } catch (error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
 
