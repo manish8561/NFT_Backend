@@ -34,7 +34,7 @@ class MintTokenModel {
             }
             // console.log(file, 'before');
             // return `10.1.1.143:3001/images/${file['filename']}`;
-            return `https://nft-poc.staging-host.com/images/${file['filename']}`;
+            return `https://nft-api.staging-host.com/api/images/${file['filename']}`;
 
         } catch (error) {
             const { Response: { errors }, ResMsg: { errors: { SOMETHING_WENT_WRONG } } } = Helper;
