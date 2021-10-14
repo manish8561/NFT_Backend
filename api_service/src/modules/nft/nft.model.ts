@@ -4,7 +4,7 @@ import TransactionModel from '../transaction/transaction.model';
 import ABI from '../../bin/abi.json';
 
 class NftModel {
-    contractAddress = '0x1522b379cB78eAF13bbCCd9b649ceC1D22e27B6A';
+    contractAddress = '0xF06e041b7c1b40432a591a77C83BAF1Ec56d5d3b';
     constructor() { }
     /**
      * @param  {any} _nft
@@ -141,7 +141,6 @@ class NftModel {
                 query = { $or : [
                     { name: new RegExp(search, 'i') },
                     { transactionHash: new RegExp(search, 'i') },
-                    { tokenId: new RegExp(search, 'i') },
                     { networkId: new RegExp(search, 'i') },
                     { description: new RegExp(search, 'i') }
                 ]};
