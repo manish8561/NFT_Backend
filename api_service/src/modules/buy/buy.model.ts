@@ -40,7 +40,7 @@ class BuyModel {
                 transactionHash: transactionHash
             }
             TransactionModel.add(obj);
-            Sell.updateMany({ nft }, { $set: { status: "INACTIVE"}},{usert:false});
+            Sell.updateMany({ nft }, { $set: { status: "INACTIVE"}},{upsert:false});
             return saveData;
         } catch(error: any) {
             throw error;
