@@ -1,25 +1,7 @@
 import { Helper } from '../../helpers';
-import MintTokens from './mintToken.schema'; 
 
 class MintTokenModel {
     constructor() { }
-
-    /** 
-     * @function createWallet
-     * @param _wallet
-     * @returns user
-     */
-    public async getMintedTokens(data: any): Promise<any> {
-        try {
-            let { page, limit, user } = data;
-            page = Number(page) || 0;
-            limit = Number(limit) || 10;
-            return await MintTokens.find({ user: { $regex: user, $options: 'i' } }).limit(limit).skip((page) * limit).sort({ timestamp: -1 });
-        } catch (error) {
-            const { Response: { errors }, ResMsg: { errors: { SOMETHING_WENT_WRONG } } } = Helper;
-            return errors(SOMETHING_WENT_WRONG, error);
-        }
-    }
     /**
      * @param  {any} data
      * @returns Promise

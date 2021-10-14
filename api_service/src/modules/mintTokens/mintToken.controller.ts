@@ -14,28 +14,9 @@ class MintTokenController implements Interfaces.Controller {
     private async initializeRoutes() {
         this.router
             .all(`${this.path}/*`)
-            .post(`${this.path}/getMintedTokens`, this.getMintedTokens)
             .post(`${this.path}/uploadFile`, FileValidator, this.uploadFile)
     }
-    /**
-     * @param  {Request} req
-     * @param  {Response} res
-     */
-    private async getMintedTokens(req: Request, res: Response) {
-        const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
 
-        try {
-            const data = req.body;
-            const result: any = await MintTokenModel.getMintedTokens(data);
-            /** return error - failed status */
-            if (result.errors) return sendError(res, { status: 400, error: result.errors });
-
-            /** return seccess - registered user */
-            return sendSuccess(res, { message: "Fetched Minted Data", data: { logs: result } });
-        } catch (error: any) {
-            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
-        }
-    }
     /**
      * @param  {Request} req
      * @param  {Response} res
