@@ -46,8 +46,20 @@ class Validate {
                     _errors[key] = `Enter a valid ${key}.`;
                 }
             }
-        }
 
+            if((key === "startDate") && (obj[key] !== undefined)) {
+                if(!Validator.isDate(obj[key])) {
+                    _errors[key] = `Enter a valid ${key}.`;
+                }
+            }
+
+            if((key === "endDate") && (obj[key] !== undefined)) {
+                if(!Validator.isDate(obj[key])) {
+                    _errors[key] = `Enter a valid ${key}.`;
+                }
+            }
+        }
+        
         return _errors;
     }
 

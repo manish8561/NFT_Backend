@@ -31,7 +31,7 @@ class TransactionController implements Interfaces.Controller {
     private async add(req: any, res: Response) {
         const { Response: { sendError, sendSuccess }, ResMsg: { errors: { SOMETHING_WENT_WRONG }} } = Helper;
         try {
-            const data = req.body;
+            let data = req.body;
             data.user = req.user;
             let result = await TransactionModel.add(data);
             if (result.error) return sendError(res, { status: 400, error: result.errors });

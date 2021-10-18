@@ -2,6 +2,7 @@ import { Helper } from '../../helpers';
 import TransactionModel from '../transaction/transaction.model';
 import NFT from '../nft/nft.schema';
 import Sell from '../sell/sell.schema';
+import transactionModel from '../transaction/transaction.model';
 
 class BuyModel {
     constructor() { }
@@ -19,7 +20,7 @@ class BuyModel {
         } = Helper;
         try {
             const { nft, price, networkId, transactionHash, token, user, nftAddress  } = data;
-
+            let saveData: any = {}
             const isError = await _validations({_id: nft, price, networkId, transactionHash, nftAddress });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
             
@@ -27,7 +28,6 @@ class BuyModel {
            const from = nftTemp.owner;
            nftTemp.owner = user['_id'];
 
-           const saveData = await nftTemp.save();
             const obj: any = {
                 user,
                 from,
@@ -35,13 +35,22 @@ class BuyModel {
                 nft,
                 networkId,
                 transactionType: 'BUY',
-                status: 'COMPLETED',
-                token: 'ETH',
+                status: 'PROCESSING',
+                token,
                 amount: price,
-                transactionHash: transactionHash
+                transactionHash
             }
-            TransactionModel.add(obj);
-            await Sell.updateMany({ nft }, { $set: { status: "INACTIVE"}},{upsert:false});
+
+            let interval:any = setInterval(async () => {
+                const result = await Helper.Web3Helper.getTransactionStatus(transactionHash);
+                if(result && result.status) {
+                    clearInterval(interval);
+                    saveData = await nftTemp.save();
+                    await Sell.updateMany({ nft }, { $set: { status: "INACTIVE"}},{upsert:false});
+                    obj.status = "COMPLETED";
+                    TransactionModel.add(obj);
+                }
+              }, 5000, "Hello.", "Updating the transaction");
             return saveData;
         } catch(error: any) {
             throw error;

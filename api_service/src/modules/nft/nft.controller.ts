@@ -67,7 +67,10 @@ class NftController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async searchNFT(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
@@ -81,7 +84,10 @@ class NftController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async adminGetList(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
@@ -95,7 +101,10 @@ class NftController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async adminGetNft(req: any, res: Response) {
         const {
             Response: { sendError, sendSuccess },
@@ -110,7 +119,10 @@ class NftController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async getCreatorNft(req: any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },
@@ -126,7 +138,10 @@ class NftController implements Interfaces.Controller {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
     }
-
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
     private async getOwnerNft(req: any, res: Response) {
         const { 
             Response: { sendError, sendSuccess },

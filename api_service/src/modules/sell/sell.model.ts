@@ -21,7 +21,7 @@ class SellModel {
             const { nftAddress, sellType, price, user, owner, minimumBid, reservePrice, token, networkId, endingPrice, expirationDate, futureDate, allowedBuyerAddress, transactionHash } = data;
             const isError = await _validations({ nftAddress, sellType, price });
             if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
-            if(sellType == 'HIGHEST_BID') {
+            if(sellType == 'AUCTION') {
                 let highestBidErrors = await _validations({ minimumBid, reservePrice });
                 if (Object.keys(highestBidErrors).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, highestBidErrors);
             }
@@ -171,7 +171,7 @@ class SellModel {
             Validate: { _validations }, 
             Response: { errors },
             ResMsg: { 
-                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
+                errors: { ALL_FIELDS_ARE_REQUIRED }
             }
         } = Helper;
         try {
@@ -184,6 +184,54 @@ class SellModel {
                 status
             }
             await Sell.updateOne({ _id: id }, { $set : obj }, { upsert: false });
+            return true;
+        } catch(error: any) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {any} _data
+     * @returns Promise
+     */
+    public async adminGetAllSellNft(_data: any): Promise<any> {
+        try {
+            let query: any = {}
+            let { page, limit, filters } = _data;
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+            if(filters && filters.search) {
+                let { search } = filters;
+                search = search.toString();
+                query = { $or : [
+                    { sellType: new RegExp(search, 'i') }
+                ]};
+            }
+            const count = await Sell.countDocuments();
+            let data: any = await Sell.find().populate('nft').populate('owner').skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
+            return {
+                count,
+                data
+            }
+        } catch(error: any) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {any} _id
+     * @returns Promise
+     */
+    public async adminDeleteSellNft(_id: any): Promise<any> {
+        const { 
+            Validate: { _validations }, 
+            Response: { errors },
+            ResMsg: { 
+                errors: { ALL_FIELDS_ARE_REQUIRED, SOMETHING_WENT_WRONG }
+            }
+        } = Helper;
+        try {
+            const isError = await _validations({ _id })
+            if (Object.keys(isError).length > 0) return errors(ALL_FIELDS_ARE_REQUIRED, isError);
+            await Sell.deleteOne({ _id });
             return true;
         } catch(error: any) {
             throw error;

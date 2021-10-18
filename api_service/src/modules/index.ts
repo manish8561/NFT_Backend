@@ -7,6 +7,7 @@ import SellController from "./sell/sell.controller";
 import BuyController from "./buy/buy.controller";
 import AdminController from "./admin/admin.controller";
 import CategoryController from "./categories/category.controller";
+import BiddingController from "./bidding/bidding.controller";
 
 export default [
     new WalletController(),
@@ -17,5 +18,6 @@ export default [
     new SellController(),
     new BuyController(),
     new AdminController(),
-    new CategoryController()
+    new CategoryController(),
+    new BiddingController()
 ]

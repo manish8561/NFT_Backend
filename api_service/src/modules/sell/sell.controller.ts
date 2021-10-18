@@ -3,6 +3,7 @@ import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
 import SellModel from "./sell.model";
+import ValidateAdminJWT from "../../middlewares/admin.middleware";
 
 class SellController implements Interfaces.Controller {
 
@@ -20,6 +21,8 @@ class SellController implements Interfaces.Controller {
             .get(`${this.path}/getSellNft/:id`, this.getSellNftDetails)
             .get(`${this.path}/cancelNft/:id`, ValidateJWT, this.cancelSellNFT)
             .post(`${this.path}/update`, ValidateJWT, this.updateSellNFT)
+            .post(`${this.path}/getAll`, ValidateAdminJWT, this.adminGetSellNft)
+            .get(`${this.path}/delete/:id`, ValidateAdminJWT, this.adminDeleteSellNFT)
     }
     /**
      * @param  {any} req
@@ -31,7 +34,7 @@ class SellController implements Interfaces.Controller {
             ResMsg: { nft: { SELL_NFT }, errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
         try {
-            const data:any = req.body;
+            let data:any = req.body;
             data.user = req.user;
             const result: any = await SellModel.sellNFT(data);
             if (result.error) return sendError(res, { status: 400, error: result.error });
@@ -90,6 +93,41 @@ class SellController implements Interfaces.Controller {
                 return sendError(res, { status: 400, error: { message : 'No data posted' } })
             }
             const result: any = await SellModel.updateSellNft(req.body);
+            if (result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async adminGetSellNft(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const result: any = await SellModel.adminGetAllSellNft(req.body);
+            if (result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+    private async adminDeleteSellNFT(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG }}
+        } = Helper;
+        try {
+            const id: any = req.params.id;
+            const result: any = await SellModel.adminDeleteSellNft(id);
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result });
         } catch(error: any) {
