@@ -1,12 +1,6 @@
 [
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "usdt_",
-          "type": "address"
-        }
-      ],
+      "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
@@ -188,9 +182,9 @@
         },
         {
           "indexed": false,
-          "internalType": "uint256",
+          "internalType": "address",
           "name": "currency",
-          "type": "uint256"
+          "type": "address"
         },
         {
           "indexed": false,
@@ -271,9 +265,32 @@
           "type": "uint168"
         },
         {
-          "internalType": "uint64",
-          "name": "timestamp",
-          "type": "uint64"
+          "internalType": "uint88",
+          "name": "startTime",
+          "type": "uint88"
+        },
+        {
+          "internalType": "uint88",
+          "name": "endTime",
+          "type": "uint88"
+        },
+        {
+          "internalType": "uint8",
+          "name": "currency",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "auctionEndTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -307,13 +324,18 @@
         },
         {
           "internalType": "uint256",
-          "name": "usdtValue",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "endTime",
           "type": "uint256"
         }
       ],
       "name": "bidOnAuction",
       "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -325,7 +347,7 @@
         },
         {
           "internalType": "uint256",
-          "name": "usdtValue",
+          "name": "tokenValue",
           "type": "uint256"
         }
       ],
@@ -374,6 +396,24 @@
         }
       ],
       "name": "changeRoyality",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "buyer",
+          "type": "address"
+        }
+      ],
+      "name": "clainAuction",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -468,9 +508,19 @@
               "type": "uint168"
             },
             {
-              "internalType": "uint64",
-              "name": "timestamp",
-              "type": "uint64"
+              "internalType": "uint88",
+              "name": "startTime",
+              "type": "uint88"
+            },
+            {
+              "internalType": "uint88",
+              "name": "endTime",
+              "type": "uint88"
+            },
+            {
+              "internalType": "uint8",
+              "name": "currency",
+              "type": "uint8"
             }
           ],
           "internalType": "struct MarketPlace721.Bid",
@@ -500,6 +550,84 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_orderId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getOrder",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint64",
+              "name": "tokenId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "address",
+              "name": "currency",
+              "type": "address"
+            },
+            {
+              "internalType": "uint128",
+              "name": "price",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "reservedPrice",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint80",
+              "name": "startTime",
+              "type": "uint80"
+            },
+            {
+              "internalType": "uint80",
+              "name": "endTime",
+              "type": "uint80"
+            },
+            {
+              "internalType": "uint8",
+              "name": "methodType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bool",
+              "name": "isClosed",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isAuction",
+              "type": "bool"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "_value",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Counters.Counter",
+              "name": "bidCounter",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct MarketPlace721.OrderBook",
+          "name": "",
+          "type": "tuple"
         }
       ],
       "stateMutability": "view",
@@ -576,9 +704,9 @@
           "type": "uint64"
         },
         {
-          "internalType": "uint8",
+          "internalType": "address",
           "name": "currency",
-          "type": "uint8"
+          "type": "address"
         },
         {
           "internalType": "uint128",
@@ -586,9 +714,24 @@
           "type": "uint128"
         },
         {
-          "internalType": "uint40",
-          "name": "timestamp",
-          "type": "uint40"
+          "internalType": "uint128",
+          "name": "reservedPrice",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint80",
+          "name": "startTime",
+          "type": "uint80"
+        },
+        {
+          "internalType": "uint80",
+          "name": "endTime",
+          "type": "uint80"
+        },
+        {
+          "internalType": "uint8",
+          "name": "methodType",
+          "type": "uint8"
         },
         {
           "internalType": "bool",
@@ -719,9 +862,29 @@
           "type": "uint128"
         },
         {
-          "internalType": "uint8",
+          "internalType": "address",
           "name": "currency",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "startTime",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "endTime",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "methodType",
           "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "reservedPrice",
+          "type": "uint256"
         },
         {
           "internalType": "bool",
@@ -878,6 +1041,24 @@
         }
       ],
       "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "bidValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateBid",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

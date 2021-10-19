@@ -49,8 +49,10 @@ class BuyModel {
                     await Sell.updateMany({ nft }, { $set: { status: "INACTIVE"}},{upsert:false});
                     obj.status = "COMPLETED";
                     TransactionModel.add(obj);
+                } else if(result && result.status === false) {
+                    clearInterval(interval);
                 }
-              }, 5000, "Hello.", "Updating the transaction");
+              }, 3000, "Hello.", "Updating the transaction");
             return saveData;
         } catch(error: any) {
             throw error;

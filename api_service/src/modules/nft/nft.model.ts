@@ -4,7 +4,7 @@ import TransactionModel from '../transaction/transaction.model';
 import ABI from '../../bin/abi.json';
 
 class NftModel {
-    contractAddress = '0xF06e041b7c1b40432a591a77C83BAF1Ec56d5d3b';
+    contractAddress = '0x80210fBe4b03A1Deb1B682962dB04ec808529373';
     constructor() { }
     /**
      * @param  {any} _nft
