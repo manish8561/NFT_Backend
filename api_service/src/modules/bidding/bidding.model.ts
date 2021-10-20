@@ -194,8 +194,14 @@ class BiddingModel {
      * @param  {string} _id
      * @returns Promise
      */
-    public async adminDeleteBid(_id: string): Promise<any> {
+    public async adminDeleteBid(_id: any): Promise<any> {
+        const {
+            Response: { errors },
+            Validate: { _validations }
+        } = Helper;
         try {
+            const isError = await _validations({ _id });
+            if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
             return await Bidding.deleteOne({_id});
         } catch (error: any) {
             throw error;

@@ -6,6 +6,7 @@ const fileMimeTypes: any = {
     "image/jpeg": "jpeg",
     "image/jpg": "jpg",
     "image/gif": "gif",
+    "image/svg": "svg"
 }
 
 const storage = multer.diskStorage({

@@ -135,7 +135,7 @@ class BiddingController implements Interfaces.Controller {
             ResMsg: { errors: { SOMETHING_WENT_WRONG } }
         } = Helper;
         try {
-            const {id} = req.params;
+            const { id } = req.params;
             if(!id) {
                 return sendError(res, { status: 400, error: { message: 'Id is required'} });
             }
