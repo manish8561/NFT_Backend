@@ -15,11 +15,11 @@ class BiddingModel {
             Validate: { _validations },
         } = Helper;
         try {
-            let { token, price, startDate, endDate, user, sellId, transactionHash  } = data;
+            let { token, price, startDate, endDate, user, sellId, transactionHash } = data;
             const isError = await _validations({ _id: sellId, token, price, transactionHash, startDate, endDate });
             if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
             let sellNftData: any = await Sell.findOne({ _id: sellId });
-            if(sellNftData) {
+            if (sellNftData) {
                 let bidding: any = new Bidding();
                 bidding.token = token;
                 bidding.price = price;
@@ -46,9 +46,9 @@ class BiddingModel {
                     transactionHash
                 }
                 return new Promise((resolve, reject) => {
-                    let interval:any = setInterval(async () => {
+                    let interval: any = setInterval(async () => {
                         const result = await Helper.Web3Helper.getTransactionStatus(transactionHash);
-                        if(result && result.status) {
+                        if (result && result.status) {
                             clearInterval(interval);
                             bidding.status = "ACTIVE";
                             bidding.transactionStatus = "COMPLETED"
@@ -56,21 +56,24 @@ class BiddingModel {
                             obj.status = "COMPLETED";
                             TransactionModel.add(obj);
                             resolve(true);
-                        } else if(result && result.status === false) {
+                        } else if (result && result.status === false) {
                             clearInterval(interval);
                             resolve(false)
                         }
-                      }, 3000, "Hello.", "Updating the transaction");
+                    }, 3000, "Hello.", "Updating the transaction");
                 })
             } else {
                 return new Error('SOMETHING WENT WRONG');
             }
 
-        } catch(error: any) {
+        } catch (error: any) {
             throw error;
         }
     }
-
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
     public async listBidd(data: any): Promise<any> {
         const {
             Response: { errors },
@@ -83,17 +86,17 @@ class BiddingModel {
             const isError = await _validations({ _id: id });
             if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
 
-            await Bidding.updateMany({ sellNft : id, status:'ACTIVE', endDate:{$lte: new Date()} },{$set:{status:'EXPIRED'}},{upsert:false});
+            await Bidding.updateMany({ sellNft: id, status: 'ACTIVE', endDate: { $lte: new Date() } }, { $set: { status: 'EXPIRED' } }, { upsert: false });
 
-            let count: any = await Bidding.countDocuments({ sellNft : id, status:'ACTIVE'  });
-            const result: any = await Bidding.find({ sellNft : id, status:'ACTIVE' })
-            .skip((page-1) * limit).limit(limit).sort({ createdAt: -1 });
-           
+            let count: any = await Bidding.countDocuments({ sellNft: id, status: 'ACTIVE' });
+            const result: any = await Bidding.find({ sellNft: id, status: 'ACTIVE' })
+                .skip((page - 1) * limit).limit(limit).sort({ createdAt: -1 });
+
             return {
                 count,
                 result
             }
-        } catch(error: any) {
+        } catch (error: any) {
             throw error;
         }
     }
@@ -111,21 +114,21 @@ class BiddingModel {
             const isError = await _validations({ _id: id, transactionHash });
             if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
 
-            return new Promise((resolve,reject)=>{
-                let interval:any = setInterval(async () => {
+            return new Promise((resolve, reject) => {
+                let interval: any = setInterval(async () => {
                     const result = await Helper.Web3Helper.getTransactionStatus(transactionHash);
-                    if(result && result.status) {
+                    if (result && result.status) {
                         clearInterval(interval);
-                         await Bidding.deleteOne({ _id: id , user: user['_id']});
-                         resolve(true);
-                    } else if(result && result.status === false) {
+                        await Bidding.deleteOne({ _id: id, user: user['_id'] });
+                        resolve(true);
+                    } else if (result && result.status === false) {
                         clearInterval(interval);
                         resolve(false);
                     }
-                  }, 3000, "Hello.", "delete the bid.");
+                }, 3000, "Hello.", "delete the bid.");
             })
-            
-        } catch(error: any) {
+
+        } catch (error: any) {
             throw error;
         }
     }
@@ -143,25 +146,58 @@ class BiddingModel {
             const isError = await _validations({ _id: id, transactionHash });
             if (Object.keys(isError).length > 0) return errors('FIELD REQUIRED', isError);
             return new Promise((resolve, reject) => {
-                let interval:any = setInterval(async () => {
+                let interval: any = setInterval(async () => {
                     const result = await Helper.Web3Helper.getTransactionStatus(transactionHash);
-                    if(result && result.status) {
+                    if (result && result.status) {
                         clearInterval(interval);
-                        let sellNftDetail: any = await Bidding.findOneAndUpdate({ _id: id }, {status : 'ACCEPTED'},{upsert:false});
-                        if(sellNftDetail && sellNftDetail.sellNft) {
-                            await Bidding.updateMany({sellNft: sellNftDetail.sellNft, _id: { $ne: id }}, { status: 'INACTIVE'}, { upsert: false })
+                        let sellNftDetail: any = await Bidding.findOneAndUpdate({ _id: id }, { status: 'ACCEPTED' }, { upsert: false });
+                        if (sellNftDetail && sellNftDetail.sellNft) {
+                            await Bidding.updateMany({ sellNft: sellNftDetail.sellNft, _id: { $ne: id } }, { status: 'INACTIVE' }, { upsert: false })
                             resolve(true);
                         } else {
                             resolve(false);
                         }
-                    } else if(result && result.status === false) {
+                    } else if (result && result.status === false) {
                         clearInterval(interval);
                         resolve(false);
                     }
-                  }, 3000, "Hello.", "Accept the bid.");
+                }, 3000, "Hello.", "Accept the bid.");
             })
 
-        } catch(error: any) {
+        } catch (error: any) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {any} data
+     * @returns Promise
+     */
+    public async adminList(data: any): Promise<any> {
+        try {
+            let { page, limit } = data;
+            page = Number(page) || 1;
+            limit = Number(limit) || 10;
+
+            let count: any = await Bidding.countDocuments({});
+            const result: any = await Bidding.find({}).populate('nft').populate('user', 'username email walletAddress')
+                .skip((page - 1) * limit).limit(limit).sort({ createdAt: -1 });
+
+            return {
+                count,
+                result
+            }
+        } catch (error: any) {
+            throw error;
+        }
+    }
+    /**
+     * @param  {string} _id
+     * @returns Promise
+     */
+    public async adminDeleteBid(_id: string): Promise<any> {
+        try {
+            return await Bidding.deleteOne({_id});
+        } catch (error: any) {
             throw error;
         }
     }

@@ -4,6 +4,7 @@ import * as Interfaces from '../../interfaces';
 import { Helper } from '../../helpers';
 import ValidateJWT from "../../middlewares/jwt.middleware";
 import BiddingModel from "./bidding.model";
+import ValidateAdminJWT from "../../middlewares/admin.middleware";
 
 class BiddingController implements Interfaces.Controller {
 
@@ -20,6 +21,8 @@ class BiddingController implements Interfaces.Controller {
             .post(`${this.path}/list`, ValidateJWT, this.listAllBidds)
             .post(`${this.path}/cancel`, ValidateJWT, this.cancelNftBid)
             .post(`${this.path}/accept`, ValidateJWT, this.acceptNftBid)
+            .post(`${this.path}/admin/list`, ValidateAdminJWT, this.adminList)
+            .get(`${this.path}/admin/delete/:id`, ValidateAdminJWT, this.adminDeleteBid)
     }
     
     /**
@@ -101,6 +104,44 @@ class BiddingController implements Interfaces.Controller {
             const result: any = await BiddingModel.acceptBidding(data);
             if (result.error) return sendError(res, { status: 400, error: result.error });
             return sendSuccess(res, { data: result, message: 'Bid accept successfully' });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+     private async adminList(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG } }
+        } = Helper;
+        try {
+            const result: any = await BiddingModel.adminList(req.body);
+            if (result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: result, message: 'Bids list successfully' });
+        } catch(error: any) {
+            return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
+        }
+    }
+    /**
+     * @param  {any} req
+     * @param  {Response} res
+     */
+     private async adminDeleteBid(req: any, res: Response) {
+        const {
+            Response: { sendError, sendSuccess },
+            ResMsg: { errors: { SOMETHING_WENT_WRONG } }
+        } = Helper;
+        try {
+            const {id} = req.params;
+            if(!id) {
+                return sendError(res, { status: 400, error: { message: 'Id is required'} });
+            }
+            const result: any = await BiddingModel.adminDeleteBid(id);
+            if (result.error) return sendError(res, { status: 400, error: result.error });
+            return sendSuccess(res, { data: true, message: 'Bid deleted successfully' });
         } catch(error: any) {
             return sendError(res, { status: 400, error: Object.keys(error).length ? error : { message: SOMETHING_WENT_WRONG } });
         }
