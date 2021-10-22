@@ -1,7 +1,12 @@
 import { Helper } from '../../helpers';
 
 class MintTokenModel {
-    constructor() { }
+    api_url:string;
+
+    constructor() { 
+        this.api_url = process.env.API_URL!;
+    }
+
     /**
      * @param  {any} data
      * @returns Promise
@@ -9,18 +14,20 @@ class MintTokenModel {
     public async uploadFile(data: any): Promise<any> {
         try {
             const { file } = data;
-            if(!file) {
+            if (!file) {
                 return {
-                    errors : 'File is empty'
+                    errors: 'File is empty'
                 }
             }
             // console.log(file, 'before');
-            // return `10.1.1.143:3001/images/${file['filename']}`;
-            return `https://nft-api.staging-host.com/api/images/${file['filename']}`;
+            if (!this.api_url) {
+                this.api_url = process.env.API_URL!;
+            }
+
+            return `${this.api_url}images/${file['filename']}`;
 
         } catch (error) {
             const { Response: { errors }, ResMsg: { errors: { SOMETHING_WENT_WRONG } } } = Helper;
-            // return errors(SOMETHING_WENT_WRONG, error);
             throw error;
         }
     }
